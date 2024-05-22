@@ -126,6 +126,19 @@ def test_parse_bilibili():
         )
     )
 
+def test_parse_jinritoutiao():
+    """
+    测试 今日头条 热搜响应
+    :return:
+    """
+    from scraper.scraper.spiders.parse.JInRiTouTiaoParse import parse_hot_search
+
+    print_json(
+        parse_hot_search(
+            text=send_request(TouTiaoHotSearchApiRequest()).text,
+            api_type=ApiType.TouTiao,
+        )
+    )
 
 if __name__ == "__main__":
     # test_parse_baidu()
@@ -133,4 +146,5 @@ if __name__ == "__main__":
     # test_parse_weibo_news()
     # test_parse_zhihu()
     # test_parse_weibo_entertainment()
-    test_parse_bilibili()
+    # test_parse_bilibili()
+    test_parse_jinritoutiao()

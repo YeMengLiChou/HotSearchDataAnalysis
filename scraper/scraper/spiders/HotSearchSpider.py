@@ -33,4 +33,28 @@ class HotSearchSpider(scrapy.Spider):
         # 知乎
         elif api_type == ZhihuHotSearchApiRequest.type.value:
             item = parse.parse_zhihu_hot_search(response.text, api_type)
+        # 澎湃
+        elif api_type == PengPainHotSearchApiRequest.type.value:
+            item = parse.parse_pengpai_hot_search(response.text, api_type)
+        # 今日头条
+        elif api_type == TouTiaoHotSearchApiRequest.type.value:
+            item = parse.parse_toutiao_hot_search(response.text, api_type)
+        # 搜狗
+        elif api_type == SougouHotSearchApiRequest.type.value:
+            item = parse.parse_sougou_hot_search(response.text, api_type)
+        # 抖音
+        elif api_type == DouyinHotSearchApiRequest.type.value:
+            item = parse.parse_douyin_hot_search(response.text, api_type)
+        # bilibili
+        elif api_type == BilibiliHotSearchApiRequest.type.value:
+            item = parse.parse_bilibili_hot_search(response.text, api_type)
+        # 快手
+        elif api_type == KuaiShouHotSearchApiRequest.type.value:
+            item = parse.parse_kuaishou_hot_search(response.text, api_type)
+        # 腾讯新闻
+        elif api_type == TencentNewsHotSearchApiRequest.type.value:
+            item = parse.parse_tencent_news_hot_search(response.text, api_type)
+        else:
+            raise RuntimeError("你丫的忘记判断了！")
+
         yield item

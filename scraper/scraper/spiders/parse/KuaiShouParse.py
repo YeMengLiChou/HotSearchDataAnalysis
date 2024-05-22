@@ -10,6 +10,7 @@ PATTERN = re.compile(
     r'hotValue":"(\d+(?:.\d+)?万?)",\S+?"__typename":"VisionHotRankItem"}'
 )
 
+
 def parse_hot_search(html_text: str, api_type: ApiType) -> HotSearchItem:
     """
     解析 快手 网页上的热搜数据

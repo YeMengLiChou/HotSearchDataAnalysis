@@ -22,7 +22,7 @@ def parse_hot_search(text: str, api_type: ApiType) -> HotSearchItem:
     for item in data:
         idx += 1
         result_items.append(CommonHotSearchItem(
-            title=item['title'],
+            title=item['Title'],
             rank=idx,
             summary="",
             hot_num=int(item['HotValue'])

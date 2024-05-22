@@ -11,7 +11,7 @@ from .SougouParse import parse_hot_search as parse_sougou_hot_search
 from .DouyinParse import parse_hot_search as parse_douyin_hot_search
 from .BilibiliParse import parse_hot_search as parse_bilibili_hot_search
 from .KuaiShouParse import parse_hot_search as parse_kuaishou_hot_search
-from .TencentNewsItems import parse_hot_search as parse_tencent_new_hot_search
+from .TencentNewsItems import parse_hot_search as parse_tencent_news_hot_search
 
 __all__ = [
     "parse_weibo_hot_search",
@@ -25,5 +25,5 @@ __all__ = [
     "parse_douyin_hot_search",
     "parse_bilibili_hot_search",
     "parse_kuaishou_hot_search",
-    "parse_tencent_new_hot_search"
+    "parse_tencent_news_hot_search"
 ]
