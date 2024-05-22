@@ -14,45 +14,49 @@ host = "172.27.237.77"  # wsl
 #host = "172.17.160.199" # aliyun
 port = 9092
 
-# ====================== scrapy/settings.py ======================
+# ====================== scrapy ======================
 [scrapy]
-
+# settings.py 在当前项目下的路径
 settings_path = "scraper.scraper.settings"
+# 要启动爬虫的名称name
 spider_name = "hot search"
 # 爬虫启动间隔，单位 min
-scrapy_start_interval = 15
+scrapy_start_interval = 10
 
-[scrapy.settings]
+
+[scrapy.settings]  # for settings.py
 # 并发请求数
-CONCURRENT_REQUESTS=16
+CONCURRENT_REQUESTS = 16
 # 请求间隔
-DOWNLOAD_DELAY=0.2
+DOWNLOAD_DELAY = 1
 # 请求超时
-DOWNLOAD_TIMEOUT=20
+DOWNLOAD_TIMEOUT = 5
 # item并发数
-CONCURRENT_ITEMS=64
+CONCURRENT_ITEMS = 64
 # 请求并发数
-CONCURRENT_REQUESTS_PER_DOMAIN=16
+CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # 重试次数
-RETRY_TIMES = 5
+RETRY_TIMES = 0
 # 最大线程池大小
-REACTOR_THREADPOOL_MAXSIZE = 16
+REACTOR_THREADPOOL_MAXSIZE = 32
 # 自动调节
-AUTOTHROTTLE_ENABLED=true
+AUTOTHROTTLE_ENABLED = false
 # 下载延迟
-AUTOTHROTTLE_START_DELAY=2
+AUTOTHROTTLE_START_DELAY = 2
 # 最大延迟
-AUTOTHROTTLE_MAX_DELAY=10
+AUTOTHROTTLE_MAX_DELAY = 10
 
 [scrapy.kafka]
 # 爬取的item发送的主题
-topic="scrapy_data_test"
-key="an"
+topic = "scrapy_data_test"
+key = "an"
 
+[scrapy.log]
+LOG_LEVEL = "DEBUG"
 
 # ============== spark ================
 
 
 [spark]
 # spark 读取kafka的主题
-kafka.topic="scrapy_data_3"
+kafka.topic = "scrapy_data_3"

@@ -47,7 +47,6 @@ class ApiRequest(abc.ABC):
         headers: Optional[dict] = None,
         body: Optional[Union[bytes, str]] = None,
         meta: Optional[dict] = None,
-        encoding: str = "utf-8",
         priority: int = 0,
         dont_filter: bool = True,
         errback: Optional[Callable] = None,
@@ -58,7 +57,6 @@ class ApiRequest(abc.ABC):
         :param headers:
         :param body:
         :param meta:
-        :param encoding:
         :param priority:
         :param dont_filter:
         :param errback:
@@ -67,11 +65,8 @@ class ApiRequest(abc.ABC):
         # 更新 content-type
         if self.content_type:
             if headers is None:
-                headers = {
-                    "Content-Type": self.content_type,
-                }
-            else:
-                headers["Content-Type"] = self.content_type
+                headers = {}
+            headers["Content-Type"] = self.content_type
 
         # 更新请求头
         if headers:
@@ -89,7 +84,6 @@ class ApiRequest(abc.ABC):
             body=body,
             cookies=self.cookies,
             meta=meta,
-            encoding=encoding,
             priority=priority,
             dont_filter=dont_filter,
             errback=errback,
@@ -103,7 +97,7 @@ class WeiBoHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "https://weibo.com/ajax/side/hotSearch"
+    url = "http://weibo.com/ajax/side/hotSearch"
 
     type = ApiType.WeiBoHotSearch
 
@@ -115,7 +109,7 @@ class WeiBoEntertainmentApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "https://weibo.com/ajax/statuses/entertainment"
+    url = "http://weibo.com/ajax/statuses/entertainment"
 
     cookies = {
         'SUB': '_2AkMRdsEcf8NxqwFRmfsQzW7iZIp3zw7EieKnKjDHJRMxHRl-yT9kqmoztRB6Ovbv8yRr5hGC5vVlQR3I5u37TIvYCgsZ'
@@ -131,7 +125,7 @@ class WeiBoNewsApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "https://weibo.com/ajax/statuses/news"
+    url = "http://weibo.com/ajax/statuses/news"
 
     cookies = {
         'SUB': '_2AkMRdsEcf8NxqwFRmfsQzW7iZIp3zw7EieKnKjDHJRMxHRl-yT9kqmoztRB6Ovbv8yRr5hGC5vVlQR3I5u37TIvYCgsZ'
@@ -147,7 +141,7 @@ class BaiduHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "https://top.baidu.com/board?tab=realtime"
+    url = "http://top.baidu.com/board?tab=realtime"
 
     content_type = None
 
@@ -161,7 +155,7 @@ class ZhihuHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "https://www.zhihu.com/billboard"
+    url = "http://www.zhihu.com/billboard"
 
     content_type = None
 
@@ -175,7 +169,7 @@ class PengPainHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "https://cache.thepaper.cn/contentapi/wwwIndex/rightSidebar"
+    url = "http://cache.thepaper.cn/contentapi/wwwIndex/rightSidebar"
 
     content_type = None
 
@@ -189,7 +183,7 @@ class TouTiaoHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "https://www.toutiao.com/hot-event/hot-board/?origin=toutiao_pc"
+    url = "http://www.toutiao.com/hot-event/hot-board/?origin=toutiao_pc"
 
     type = ApiType.TouTiao
 
@@ -201,7 +195,7 @@ class SougouHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "https://go.ie.sogou.com/hot_ranks"
+    url = "http://go.ie.sogou.com/hot_ranks"
 
     type = ApiType.Sougou
 
@@ -213,7 +207,7 @@ class T360HotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "https://trends.so.com/top/realtime"
+    url = "http://trends.so.com/top/realtime"
 
     type = ApiType.T360
 
@@ -225,7 +219,7 @@ class DouyinHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "https://www.douyin.com/aweme/v1/web/hot/search/list/"
+    url = "http://www.douyin.com/aweme/v1/web/hot/search/list/"
 
     headers = {"Referer": "https://www.douyin.com/hot"}
 
@@ -239,7 +233,7 @@ class BilibiliHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "https://api.bilibili.com/x/web-interface/wbi/search/square?limit=50&platform=web"
+    url = "http://api.bilibili.com/x/web-interface/wbi/search/square?limit=50&platform=web"
 
     type = ApiType.Bilibili
 
@@ -251,7 +245,7 @@ class KuaiShouHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "https://www.kuaishou.com/?isHome=1"
+    url = "http://www.kuaishou.com/?isHome=1"
 
     content_type = None
 
@@ -265,7 +259,8 @@ class TencentNewsHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "https://i.news.qq.com/gw/event/pc_hot_ranking_list?ids_hash=&offset=0&page_size=50&appver=15.5_qqnews_7.1.60&rank_id=hot"
+    url = ("http://i.news.qq.com/gw/event/pc_hot_ranking_list?ids_hash=&offset=0&page_size=50&appver=15.5_qqnews_7.1"
+           ".60&rank_id=hot")
 
     content_type = None
 

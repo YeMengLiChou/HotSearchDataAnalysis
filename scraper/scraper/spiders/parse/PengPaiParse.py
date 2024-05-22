@@ -21,11 +21,12 @@ def parse_hot_search(text: str, api_type: ApiType) -> HotSearchItem:
     idx = 0
     for item in hot_news:
         idx += 1
+
         result_items.append(
             PengPaiHotSearchItem(
                 title=item["name"],
                 publish_timestamp=int(item["pubTimeLong"]),
-                tags=[tag["tag"] for tag in item["tagList"]],
+                tags=[tag["tag"] for tag in item.get("tagList", [])],
                 praise_nums=int(item["praiseTimes"]),
                 comment_nums=int(item["interactionNum"]),
                 node=item["nodeInfo"]["name"],

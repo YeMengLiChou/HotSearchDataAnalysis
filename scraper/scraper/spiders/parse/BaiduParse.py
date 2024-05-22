@@ -21,7 +21,6 @@ def parse_hot_search(html_text: str, api_type: ApiType) -> HotSearchItem:
         "//div[contains(@class, 'container-bg_')]/div[@style='margin-bottom:20px']/div"
     )
     for item in items_container:
-        print(item.xpath('./@class'))
         hot_num = int(
             xpath.first(item, ".//div[contains(@class, 'hot-index_')]/text()").strip()
         )

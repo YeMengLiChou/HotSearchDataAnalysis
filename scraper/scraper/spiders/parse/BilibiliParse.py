@@ -18,7 +18,6 @@ def parse_hot_search(text: str, api_type: ApiType) -> HotSearchItem:
     """
 
     result_items: list[CommonHotSearchNoValueItem] = []
-    print(text)
     data = json.loads(text)["data"]["trending"]["list"]
     idx = 0
     for item in data:

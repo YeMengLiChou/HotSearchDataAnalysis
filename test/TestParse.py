@@ -172,13 +172,45 @@ def test_parse_pengpai():
     )
 
 
+def test_parse_tencent():
+    """
+    测试腾讯热搜响应
+    :return:
+    """
+    from scraper.scraper.spiders.parse.TencentNewsItems import parse_hot_search
+
+    print_json(
+        parse_hot_search(
+            text=send_request(TencentNewsHotSearchApiRequest()).text,
+            api_type=ApiType.TencentNews,
+        )
+    )
+
+
+def test_parse_sougou():
+    """
+    测试搜狗热搜响应
+    :return:
+    """
+    from scraper.scraper.spiders.parse.SougouParse import parse_hot_search
+
+    print_json(
+        parse_hot_search(
+            text=send_request(SougouHotSearchApiRequest()).text,
+            api_type=ApiType.Sougou,
+        )
+    )
+
+
 if __name__ == "__main__":
-    # test_parse_baidu()
-    # test_parse_weibo_hot()
-    # test_parse_weibo_news()
-    # test_parse_zhihu()
-    # test_parse_weibo_entertainment()
-    # test_parse_bilibili()
-    # test_parse_jinritoutiao()
-    # test_parse_kuaishou()
+    test_parse_baidu()
+    test_parse_weibo_hot()
+    test_parse_weibo_news()
+    test_parse_zhihu()
+    test_parse_weibo_entertainment()
+    test_parse_bilibili()
+    test_parse_jinritoutiao()
+    test_parse_kuaishou()
     test_parse_pengpai()
+    test_parse_tencent()
+    test_parse_sougou()

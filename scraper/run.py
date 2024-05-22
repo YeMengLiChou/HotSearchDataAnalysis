@@ -4,7 +4,6 @@ import sys
 from logging.handlers import RotatingFileHandler
 
 import coloredlogs
-import scrapy
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 from scrapy.utils import log

@@ -134,9 +134,10 @@ def create_topic(topic: str):
     return response.topic_errors[0][1] == 0  # verify error code
 
 
-def send_item_to_kafka(item: Union[dict, str]):
+def send_item_to_kafka(item: Union[dict, str], immediate: bool = False):
     """
     发送 item 数据到 kafka 队列中
+    :param immediate: 立即调用 flush 发送数据
     :param item:
     :return:
     """
@@ -154,11 +155,10 @@ def send_item_to_kafka(item: Union[dict, str]):
         _config["topic"],
         value=value,
         key=_config["key"],
-        timestamp_ms=time.now_timestamp(),
+        timestamp_ms=time_utils.now_timestamp(),
     )
-    # it will block the application when kafka-server closed connections
-    # response.get()
-    # return response.succeeded()
+    if immediate:
+        _producer.flush(timeout=5_000)
 
 
 def flush_to_kafka():

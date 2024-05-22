@@ -26,5 +26,5 @@ if __name__ == "__main__":
         raise ValueError(
             "`scrapy.scrapy_start_interval` must not be None and must be int"
         )
-
+    __start_scrape()
     pass

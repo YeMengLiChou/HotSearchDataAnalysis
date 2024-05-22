@@ -92,3 +92,9 @@ class ApiType(Enum):
     """
     360 热搜
     """
+
+    @staticmethod
+    def get_name_by_value(api_type: int) -> str:
+        for k, v in ApiType.__members__.items():
+            if v.value == api_type:
+                return k
