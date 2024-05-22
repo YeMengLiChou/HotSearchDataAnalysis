@@ -11,6 +11,7 @@ from .SougouParse import parse_hot_search as parse_sougou_hot_search
 from .DouyinParse import parse_hot_search as parse_douyin_hot_search
 from .BilibiliParse import parse_hot_search as parse_bilibili_hot_search
 from .KuaiShouParse import parse_hot_search as parse_kuaishou_hot_search
+
 __all__ = [
     "parse_weibo_hot_search",
     "parse_weibo_entertainment",

@@ -21,7 +21,7 @@ class ApiRequest(abc.ABC):
     请求 url
     """
 
-    cookies: Optional[str] = None
+    cookies: Optional[dict] = None
     """
     Cookies
     """
@@ -117,7 +117,9 @@ class WeiBoEntertainmentApiRequest(ApiRequest):
 
     url = "https://weibo.com/ajax/statuses/entertainment"
 
-    cookies = "SUB=_2AkMRdsEcf8NxqwFRmfsQzW7iZIp3zw7EieKnKjDHJRMxHRl-yT9kqmoztRB6Ovbv8yRr5hGC5vVlQR3I5u37TIvYCgsZ;"
+    cookies = {
+        'SUB': '_2AkMRdsEcf8NxqwFRmfsQzW7iZIp3zw7EieKnKjDHJRMxHRl-yT9kqmoztRB6Ovbv8yRr5hGC5vVlQR3I5u37TIvYCgsZ'
+    }
 
     type = ApiType.WeiBoEntertainment
 
@@ -131,7 +133,9 @@ class WeiBoNewsApiRequest(ApiRequest):
 
     url = "https://weibo.com/ajax/statuses/news"
 
-    cookies = "SUB=_2AkMRdsEcf8NxqwFRmfsQzW7iZIp3zw7EieKnKjDHJRMxHRl-yT9kqmoztRB6Ovbv8yRr5hGC5vVlQR3I5u37TIvYCgsZ;"
+    cookies = {
+        'SUB': '_2AkMRdsEcf8NxqwFRmfsQzW7iZIp3zw7EieKnKjDHJRMxHRl-yT9kqmoztRB6Ovbv8yRr5hGC5vVlQR3I5u37TIvYCgsZ'
+    }
 
     type = ApiType.WeiBoNews
 
