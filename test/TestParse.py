@@ -126,6 +126,7 @@ def test_parse_bilibili():
         )
     )
 
+
 def test_parse_jinritoutiao():
     """
     测试 今日头条 热搜响应
@@ -140,6 +141,22 @@ def test_parse_jinritoutiao():
         )
     )
 
+
+def test_parse_kuaishou():
+    """
+    测试快手热搜响应
+    :return:
+    """
+    from scraper.scraper.spiders.parse.KuaiShouParse import parse_hot_search
+
+    print_json(
+        parse_hot_search(
+            html_text=send_request(KuaiShouHotSearchApiRequest()).text,
+            api_type=ApiType.KuaiShou,
+        )
+    )
+
+
 if __name__ == "__main__":
     # test_parse_baidu()
     # test_parse_weibo_hot()
@@ -147,4 +164,5 @@ if __name__ == "__main__":
     # test_parse_zhihu()
     # test_parse_weibo_entertainment()
     # test_parse_bilibili()
-    test_parse_jinritoutiao()
+    # test_parse_jinritoutiao()
+    test_parse_kuaishou()

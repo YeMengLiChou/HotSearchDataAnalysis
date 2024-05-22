@@ -20,19 +20,19 @@ def parse_hot_search(html_text: str, api_type: ApiType) -> HotSearchItem:
     """
 
     result_items: list[CommonHotSearchItem] = []
-
     html_text = html_text.replace(" ", "").replace("\n", "")
+
     for item in PATTERN.findall(html_text):
-        hot_num_str = item[3]
+        hot_num_str = item[2]
         if "万" in hot_num_str:
             hot_num_str = hot_num_str.replace("万", "")
-            hot_num = int(hot_num_str) * 10_000
+            hot_num = int(float(hot_num_str) * 10_000)
         else:
             hot_num = int(hot_num_str)
 
         result_items.append(
             CommonHotSearchItem(
-                rank=int(item[1]), title=item[2], hot_num=hot_num, summary=""
+                rank=int(item[0]), title=item[1], hot_num=hot_num, summary=""
             )
         )
 
