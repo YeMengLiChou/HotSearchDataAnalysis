@@ -8,6 +8,11 @@ from scraper.api import *
 
 
 def send_request(api: ApiRequest) -> Response:
+    """
+    发送请求
+    :param api: 见 [scraper.api] 部分
+    :return:
+    """
     scrapy_request = api.get_scrapy_request()
     return requests.request(
         method=scrapy_request.method,
@@ -20,6 +25,11 @@ def send_request(api: ApiRequest) -> Response:
 
 
 def print_json(obj: Any):
+    """
+    以 json 的格式输出
+    :param obj:
+    :return:
+    """
     print(json.dumps(obj, ensure_ascii=False, indent=4, default=lambda x: x.__dict__))
 
 

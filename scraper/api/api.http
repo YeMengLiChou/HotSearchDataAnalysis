@@ -1,3 +1,69 @@
 # 微博热搜榜
 GET https://weibo.com/ajax/side/hotSearch HTTP/1.1
 Content-Type: application/json; charset=utf-8
+
+###
+
+# 微博文娱榜
+# @no-redirect
+GET https://weibo.com/ajax/statuses/entertainment HTTP/1.1
+Content-Type: application/json; charset=utf-8
+Cookie:SUB=_2AkMRdsEcf8NxqwFRmfsQzW7iZIp3zw7EieKnKjDHJRMxHRl-yT9kqmoztRB6Ovbv8yRr5hGC5vVlQR3I5u37TIvYCgsZ;
+
+###
+
+# 微博要闻榜
+GET https://weibo.com/ajax/statuses/news HTTP/1.1
+Content-Type: application/json; charset=utf-8
+Cookie:SUB=_2AkMRdsEcf8NxqwFRmfsQzW7iZIp3zw7EieKnKjDHJRMxHRl-yT9kqmoztRB6Ovbv8yRr5hGC5vVlQR3I5u37TIvYCgsZ;
+
+###
+
+# 百度热搜网页
+GET https://top.baidu.com/board?tab=realtime HTTP/1.1
+
+###
+
+
+# 知乎热榜
+# @no-redirect
+GET https://www.zhihu.com/billboard HTTP/1.1
+
+###
+
+# 澎湃热搜
+GET https://cache.thepaper.cn/contentapi/wwwIndex/rightSidebar HTTP/1.1
+Content-Type: application/json; charset=utf-8
+###
+
+# 今日头条
+GET https://www.toutiao.com/hot-event/hot-board/?origin=toutiao_pc HTTP/1.1
+Content-Type: application/json; charset=utf-8
+###
+
+
+# 搜狗热搜榜
+GET https://go.ie.sogou.com/hot_ranks HTTP/1.1
+Content-Type: application/json; charset=utf-8
+###
+
+#  抖音热搜榜
+GET https://www.douyin.com/aweme/v1/web/hot/search/list/ HTTP/1.1
+Content-Type: application/json; charset=utf-8
+Referer: https://www.douyin.com/hot
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0
+###
+
+# bilibili
+GET https://api.bilibili.com/x/web-interface/wbi/search/square?limit=50&platform=web HTTP/1.1
+Content-Type: application/json; charset=utf-8
+###
+
+# 快手
+GET https://www.kuaishou.com/?isHome=1 HTTP/1.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0
+###
+
+# 腾讯新闻
+GET https://i.news.qq.com/gw/event/pc_hot_ranking_list?ids_hash=&offset=0&page_size=50&appver=15.5_qqnews_7.1.60&rank_id=hot HTTP/1.1
+Content-Type: application/json; charset=utf-8

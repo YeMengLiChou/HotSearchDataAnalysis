@@ -6,7 +6,7 @@ from typing import Union
 from kafka import KafkaProducer, KafkaAdminClient, errors, admin
 from config.config import settings
 from utils import debug_stats
-from utils import time
+from utils import time_utils
 
 __all__ = ["send_item_to_kafka"]
 

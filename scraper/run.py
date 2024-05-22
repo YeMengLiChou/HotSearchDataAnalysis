@@ -192,6 +192,12 @@ def _run_spider(spider_name: str, _settings: Settings):
     sys.exit(exitcode)
 
 
-def start(spider_name: str, module_path: str):
-    settings = _get_project_settings(module_path)
+def start(spider_name: str, settings_path: str):
+    """
+    启动爬虫
+    :param spider_name: 爬虫的名称
+    :param settings_path: settings.py 文件在当前项目中的包名
+    :return:
+    """
+    settings = _get_project_settings(settings_path)
     _run_spider(spider_name, settings)

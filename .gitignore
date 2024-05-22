@@ -1,7 +1,5 @@
-__pychche__/
+__pycache__/
 .idea/
 build/
 logs/
 log/
-test/
-/__pycache__/
