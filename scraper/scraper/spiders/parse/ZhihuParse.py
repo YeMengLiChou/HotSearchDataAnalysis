@@ -40,7 +40,7 @@ def parse_hot_search(html_text: str, api_type: ApiType) -> HotSearchItem:
         result_items.append(
             CommonHotSearchItem(
                 title=item["titleArea"]["text"],
-                summary=item["excerptArea"]["text"],
+                summary=item["excerptArea"]["text"].replace('[图片]', ''),
                 rank=idx,
                 hot_num=hot_num,
             )
