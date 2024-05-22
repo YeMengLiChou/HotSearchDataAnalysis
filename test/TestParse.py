@@ -14,10 +14,17 @@ def send_request(api: ApiRequest) -> Response:
     :return:
     """
     scrapy_request = api.get_scrapy_request()
+    headers = scrapy_request.headers
+    gen_headers = {}
+    for k, v in headers.items():
+        if isinstance(v, list):
+            v = ";".join([x.decode() for x in v])
+        gen_headers[k] = v
+
     return requests.request(
         method=scrapy_request.method,
         url=scrapy_request.url,
-        headers=scrapy_request.headers,
+        headers=gen_headers,
         cookies=scrapy_request.cookies,
         data=scrapy_request.body,
         timeout=5,
@@ -44,5 +51,17 @@ def test_parse_baidu():
     )
 
 
+def test_parse_weibo_hot():
+    from scraper.scraper.spiders.parse.WeiboParse import parse_hot_search
+
+    print_json(
+        parse_hot_search(
+            text=send_request(WeiBoHotSearchApiRequest()).text,
+            api_type=ApiType.WeiBoHotSearch,
+        )
+    )
+
+
 if __name__ == "__main__":
-    test_parse_baidu()
+    # test_parse_baidu()
+    test_parse_weibo_hot()
