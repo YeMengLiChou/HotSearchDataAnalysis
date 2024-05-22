@@ -1,4 +1,4 @@
-def first_element(src, express: str):
+def first(src, express: str):
     """
     返回第一个元素，如果没有则返回None
     :param src:

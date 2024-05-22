@@ -23,22 +23,14 @@ def parse_hot_search(html_text: str, api_type: ApiType) -> HotSearchItem:
     for item in items_container:
         print(item.xpath('./@class'))
         hot_num = int(
-            xpath.first_element(
-                item, ".//div[contains(@class, 'hot-index_')]/text()"
-            ).strip()
+            xpath.first(item, ".//div[contains(@class, 'hot-index_')]/text()").strip()
         )
-        title = xpath.first_element(
-            item, ".//div[@class='c-single-text-ellipsis']/text()"
-        ).strip()
-        summary = xpath.first_element(
-            item, ".//div[contains(@class, 'hot-desc_')]/text()"
-        ).strip()
+        title = xpath.first(item, ".//div[@class='c-single-text-ellipsis']/text()").strip()
+        summary = xpath.first(item, ".//div[contains(@class, 'hot-desc_')]/text()").strip()
 
         try:
             rank = int(
-                xpath.first_element(
-                    item, ".//div[contains(@class, 'c-index-bg')]/text()"
-                ).strip()
+                xpath.first(item, ".//div[contains(@class, 'c-index-bg')]/text()").strip()
             )
         except:
             rank = 0
