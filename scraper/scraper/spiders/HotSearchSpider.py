@@ -1,15 +1,11 @@
 from typing import Iterable, Any
 
-import scrapy
+from scrapy import Request
 from scrapy.http import Response
 
-
-from constants.scrapy import ResponseMetaField
-
-from scrapy import Request
 from scraper.api import *
-from scraper.scraper.spiders import parse
 from scraper.scraper.items import HotSearchItem
+from scraper.scraper.spiders import parse
 
 
 class HotSearchSpider(scrapy.Spider):
@@ -31,7 +27,10 @@ class HotSearchSpider(scrapy.Spider):
         # 要闻棒
         elif api_type == WeiBoNewsApiRequest.type.value:
             item = parse.parse_weibo_news(response.text, api_type)
+        # 百度
         elif api_type == BaiduHotSearchApiRequest.type.value:
             item = parse.parse_baidu_hot_search(response.text, api_type)
-
+        # 知乎
+        elif api_type == ZhihuHotSearchApiRequest.type.value:
+            item = parse.parse_zhihu_hot_search(response.text, api_type)
         yield item

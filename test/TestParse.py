@@ -22,6 +22,10 @@ def send_request(api: ApiRequest) -> Response:
             v = ";".join([x.decode() for x in v])
         gen_headers[k] = v
 
+    gen_headers["User-Agent"] = (
+        "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0"
+    )
     return requests.request(
         method=scrapy_request.method,
         url=scrapy_request.url,
@@ -93,8 +97,40 @@ def test_parse_zhihu():
     )
 
 
+def test_parse_weibo_entertainment():
+    """
+    测试 Weibo 娱乐热搜响应
+    :return:
+    """
+    from scraper.scraper.spiders.parse.WeiboParse import parse_entertainment_hot_search
+
+    print_json(
+        parse_entertainment_hot_search(
+            text=send_request(WeiBoEntertainmentApiRequest()).text,
+            api_type=ApiType.WeiBoEntertainment,
+        )
+    )
+
+
+def test_parse_bilibili():
+    """
+    测试 Bilibili 热搜响应
+    :return:
+    """
+    from scraper.scraper.spiders.parse.BilibiliParse import parse_hot_search
+
+    print_json(
+        parse_hot_search(
+            text=send_request(BilibiliHotSearchApiRequest()).text,
+            api_type=ApiType.Bilibili,
+        )
+    )
+
+
 if __name__ == "__main__":
     # test_parse_baidu()
     # test_parse_weibo_hot()
     # test_parse_weibo_news()
-    test_parse_zhihu()
+    # test_parse_zhihu()
+    # test_parse_weibo_entertainment()
+    test_parse_bilibili()

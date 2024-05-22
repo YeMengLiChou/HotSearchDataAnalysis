@@ -16,8 +16,10 @@ def parse_hot_search(text: str, api_type: ApiType) -> HotSearchItem:
     :param api_type:
     :return:
     """
+
     result_items: list[CommonHotSearchNoValueItem] = []
-    data = json.loads(text)["data"]["list"]
+    print(text)
+    data = json.loads(text)["data"]["trending"]["list"]
     idx = 0
     for item in data:
         idx += 1
