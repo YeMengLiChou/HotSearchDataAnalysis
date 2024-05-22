@@ -157,6 +157,21 @@ def test_parse_kuaishou():
     )
 
 
+def test_parse_pengpai():
+    """
+    测试彭拍热搜响应
+    :return:
+    """
+    from scraper.scraper.spiders.parse.PengPaiParse import parse_hot_search
+
+    print_json(
+        parse_hot_search(
+            text=send_request(PengPainHotSearchApiRequest()).text,
+            api_type=ApiType.PengPai,
+        )
+    )
+
+
 if __name__ == "__main__":
     # test_parse_baidu()
     # test_parse_weibo_hot()
@@ -165,4 +180,5 @@ if __name__ == "__main__":
     # test_parse_weibo_entertainment()
     # test_parse_bilibili()
     # test_parse_jinritoutiao()
-    test_parse_kuaishou()
+    # test_parse_kuaishou()
+    test_parse_pengpai()

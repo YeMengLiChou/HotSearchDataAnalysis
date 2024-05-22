@@ -26,8 +26,8 @@ def parse_hot_search(text: str, api_type: ApiType) -> HotSearchItem:
                 title=item["name"],
                 publish_timestamp=int(item["pubTimeLong"]),
                 tags=[tag["tag"] for tag in item["tagList"]],
-                praise_nums=int(item["praiseNum"]),
-                comment_nums=int(item["commentNum"]),
+                praise_nums=int(item["praiseTimes"]),
+                comment_nums=int(item["interactionNum"]),
                 node=item["nodeInfo"]["name"],
                 rank=idx,
             )
