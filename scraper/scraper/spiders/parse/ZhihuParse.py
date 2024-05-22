@@ -1,3 +1,4 @@
+import json
 import re
 
 from lxml import etree
@@ -19,29 +20,31 @@ def parse_hot_search(html_text: str, api_type: ApiType) -> HotSearchItem:
 
     html = etree.HTML(html_text, etree.HTMLParser())
 
-    items = html.xpath("//a[@class='HotList-item']")
-    for item in items:
-        rank = int(
-            xpath.first(
-                item, ".//div[@class='HotList-itemIndex HotList-itemIndexHot']/text()"
-            ).strip()
-        )
+    js_data = xpath.first(html, "//script[@id='js-initialData']/text()")
+    json_data = json.loads(js_data)
 
-        title: str = xpath.first(
-            item, ".//div[@class='HotList-itemTitle']/text()"
-        ).strip()
-        desc: str = xpath.first(
-            item, ".//div[@class='HotList-itemExcerpt']/text()"
-        ).strip()
+    hot_list = json_data["initialState"]["topstory"]["hotList"]
 
-        hot_num_str: str = xpath.first(
-            item, ".//div[@class='HotList-itemMetrics']/text()"
-        ).strip()
+    idx = 0
+    for item in hot_list:
+        idx += 1
+        item = item["target"]
+
+        hot_num_str = item["metricsArea"]["text"]
         # 正则匹配
         match = re.match(r"(\d+)", hot_num_str)
         hot_num = int(match.group(1))
         if "万" in hot_num_str:
             hot_num *= 10000
+
+        result_items.append(
+            CommonHotSearchItem(
+                title=item["titleArea"]["text"],
+                summary=item["excerptArea"]["text"],
+                rank=idx,
+                hot_num=hot_num,
+            )
+        )
 
     return HotSearchItem(
         api_type=api_type.value,
