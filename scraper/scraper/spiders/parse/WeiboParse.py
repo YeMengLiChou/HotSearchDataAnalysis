@@ -113,19 +113,17 @@ def parse_news_hot_search(text: str, api_type: ApiType) -> HotSearchItem:
         for text in item["category"].split("|"):
             if not text.isdigit():
                 cates.append(text)
-
         result_items.append(
             WeiBoItems.WeiboNewsItem(
                 summary=item["summary"],
                 topic=item["topic"],
-                rank=item["hot_rank_position"],
+                rank=item["rank"],
                 mention=item["mention"],
                 read=item["read"],
                 claim=item["claim"],
                 category=cates,
             )
         )
-
     return HotSearchItem(
         api_type=api_type.value, data=result_items, timestamp=time_utils.now_timestamp()
     )
