@@ -1,0 +1,6 @@
+__pychche__/
+.idea/
+build/
+logs/
+log/
+test/

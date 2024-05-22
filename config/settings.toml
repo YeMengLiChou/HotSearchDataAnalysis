@@ -1,0 +1,51 @@
+# 调试用
+[debug]
+enable = true
+#enable = false
+
+# ======================== redis配置 ==========================
+[redis]
+host = "127.0.0.1"
+port = 6379
+db = 0
+
+[kafka]
+host = "172.27.237.77"  # wsl
+#host = "172.17.160.199" # aliyun
+port = 9092
+
+# ====================== scrapy/settings.py ======================
+[scrapy.settings]
+# 并发请求数
+CONCURRENT_REQUESTS=16
+# 请求间隔
+DOWNLOAD_DELAY=0.2
+# 请求超时
+DOWNLOAD_TIMEOUT=20
+# item并发数
+CONCURRENT_ITEMS=64
+# 请求并发数
+CONCURRENT_REQUESTS_PER_DOMAIN=16
+# 重试次数
+RETRY_TIMES = 5
+# 最大线程池大小
+REACTOR_THREADPOOL_MAXSIZE = 16
+# 自动调节
+AUTOTHROTTLE_ENABLED=true
+# 下载延迟
+AUTOTHROTTLE_START_DELAY=2
+# 最大延迟
+AUTOTHROTTLE_MAX_DELAY=10
+
+[scrapy.kafka]
+# 爬取的item发送的主题
+topic="scrapy_data_test"
+key="an"
+
+
+# ============== spark ================
+
+
+[spark]
+# spark 读取kafka的主题
+kafka.topic="scrapy_data_3"
