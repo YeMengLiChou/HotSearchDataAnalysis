@@ -1,3 +1,4 @@
+import json
 import logging
 
 from scrapy.crawler import Crawler
@@ -5,8 +6,7 @@ from scrapy.statscollectors import StatsCollector
 
 from constants.scrapy import ApiType
 
-# from utils import kafka_tools
-from constants.scrapy.Items import HotSearchItemConstant
+from utils import kafka_tools
 from scraper.scraper.items import HotSearchItem
 from utils import redis_tools
 
@@ -30,7 +30,10 @@ class SendKafkaPipeline:
         # 将 item 发送给 kafka
         try:
             logger.debug(item)
-            # kafka_tools.send_item_to_kafka(item, immediate=True)
+            kafka_tools.send_item_to_kafka(
+                json.dumps(item, default=lambda x: x.__dict__, ensure_ascii=False),
+                immediate=True,
+            )
             logger.info(f"{ApiType(item.api_type).name}: Success")
             redis_tools.update_api_scraped(ApiType(item.api_type).name, item.timestamp)
         except Exception as e:

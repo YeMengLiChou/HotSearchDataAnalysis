@@ -92,4 +92,4 @@ class HotSearchSpider(scrapy.Spider):
         for api_type in ApiType:
             res = redis_tools.get_api_information(api_type.name)
             content += f"{api_type.name}: {res['time']} - {res['count']}\n"
-        spider.logger.info(content)
+        spider.logger.warning(content)

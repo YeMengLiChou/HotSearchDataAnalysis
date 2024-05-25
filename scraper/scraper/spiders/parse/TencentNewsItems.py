@@ -24,7 +24,7 @@ def parse_hot_search(text: str, api_type: ApiType) -> HotSearchItem:
         title = item["hotEvent"]["title"]
         timestamp = item["timestamp"]
         abstract = item.get("abstract", "")
-        source = item["source"]
+        source = item.get("source", "")
         read_count = item.get("readCount", -1)
         comment_count = item.get("comments", -1)
         rank = item["ranking"]

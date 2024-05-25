@@ -1,7 +1,7 @@
 # 调试用
 [debug]
-enable = true
-#enable = false
+#enable = true
+enable = false
 
 # ======================== redis配置 ==========================
 [redis]
@@ -26,7 +26,7 @@ scrapy_start_interval = 10
 
 [scrapy.settings]  # for settings.py
 # 并发请求数
-CONCURRENT_REQUESTS = 16
+CONCURRENT_REQUESTS = 6
 # 请求间隔
 DOWNLOAD_DELAY = 0
 # 请求超时
@@ -51,12 +51,12 @@ REDIRECT_ENABLED = true
 
 [scrapy.kafka]
 # 爬取的item发送的主题
-topic = "scrapy_data_test"
-key = "an"
+topic = "hot_1"
+key = "a"
 
 [scrapy.log]
-LOG_LEVEL = "DEBUG"
-LOG_FILE = "logs/log"
+LOG_LEVEL = "WARNING"
+LOG_FILE = "logs/scrape.log"
 LOG_FILE_BACKUP_COUNT = 100
 LOG_FILE_TYPE="size"
 # ============== spark ================
@@ -64,4 +64,4 @@ LOG_FILE_TYPE="size"
 
 [spark]
 # spark 读取kafka的主题
-kafka.topic = "scrapy_data_3"
+kafka.topic = "hot_1"
