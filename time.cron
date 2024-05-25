@@ -1,0 +1,1 @@
+*/2 * * * * /bin/bash -C ~/project/HotSearchDataAnalysis/exec.sh
