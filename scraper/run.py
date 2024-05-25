@@ -1,5 +1,6 @@
 import importlib
 import logging
+import os.path
 import sys
 from logging.handlers import RotatingFileHandler
 
@@ -92,6 +93,11 @@ def configure_logging(settings: Settings):
         file_mode = "a" if settings.getbool("LOG_FILE_APPEND") else "w"  # 日志文件模式
         encoding = settings.get("LOG_ENCODING")  # 日志文件编码
         backup_count = settings.getint("LOG_FILE_BACKUP_COUNT")
+
+        # 新建所在文件夹
+        if not os.path.exists(os.path.dirname(filename)):
+            os.mkdir(os.path.dirname(filename))
+
         # 没有指定
         if log_type is None:
             handler = logging.FileHandler(

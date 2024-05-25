@@ -4,6 +4,7 @@ from typing import Optional, Callable, Union
 import scrapy
 
 from constants.scrapy import ApiType, ResponseMetaField
+from utils import time_utils
 
 
 class ApiRequest(abc.ABC):

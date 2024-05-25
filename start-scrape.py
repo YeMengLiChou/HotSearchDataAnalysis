@@ -19,12 +19,4 @@ def __start_scrape():
 
 
 if __name__ == "__main__":
-    # TODO: 定时运行
-    if not (interval := get_settings("scrapy.scrapy_start_interval")) or not isinstance(
-        interval, int
-    ):
-        raise ValueError(
-            "`scrapy.scrapy_start_interval` must not be None and must be int"
-        )
     __start_scrape()
-    pass

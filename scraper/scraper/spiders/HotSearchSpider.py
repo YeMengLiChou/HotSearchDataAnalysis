@@ -1,7 +1,7 @@
 import logging
-from typing import Iterable, Any
+from typing import Any
 
-from scrapy import Request, signals
+from scrapy import signals
 from scrapy.crawler import Crawler
 from scrapy.http import Response
 
