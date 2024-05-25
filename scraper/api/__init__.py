@@ -26,7 +26,7 @@ class ApiRequest(abc.ABC):
     Cookies
     """
 
-    content_type: Optional[str] = "application/json; charset=utf-8"
+    accept: Optional[str] = "application/json; charset=utf-8"
     """
     请求内容需要为 application/json
     """
@@ -63,10 +63,10 @@ class ApiRequest(abc.ABC):
         :return:
         """
         # 更新 content-type
-        if self.content_type:
+        if self.accept:
             if headers is None:
                 headers = {}
-            headers["Content-Type"] = self.content_type
+            headers["Accept"] = self.accept
 
         # 更新请求头
         if headers:
@@ -97,7 +97,7 @@ class WeiBoHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "http://weibo.com/ajax/side/hotSearch"
+    url = "https://weibo.com/ajax/side/hotSearch"
 
     type = ApiType.WeiBoHotSearch
 
@@ -109,7 +109,7 @@ class WeiBoEntertainmentApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "http://weibo.com/ajax/statuses/entertainment"
+    url = "https://weibo.com/ajax/statuses/entertainment"
 
     cookies = {
         'SUB': '_2AkMRdsEcf8NxqwFRmfsQzW7iZIp3zw7EieKnKjDHJRMxHRl-yT9kqmoztRB6Ovbv8yRr5hGC5vVlQR3I5u37TIvYCgsZ'
@@ -125,7 +125,7 @@ class WeiBoNewsApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "http://weibo.com/ajax/statuses/news"
+    url = "https://weibo.com/ajax/statuses/news"
 
     cookies = {
         'SUB': '_2AkMRdsEcf8NxqwFRmfsQzW7iZIp3zw7EieKnKjDHJRMxHRl-yT9kqmoztRB6Ovbv8yRr5hGC5vVlQR3I5u37TIvYCgsZ'
@@ -141,9 +141,9 @@ class BaiduHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "http://top.baidu.com/board?tab=realtime"
+    url = "https://top.baidu.com/board?tab=realtime"
 
-    content_type = None
+    accept = None
 
     type = ApiType.Baidu
 
@@ -155,9 +155,9 @@ class ZhihuHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "http://www.zhihu.com/billboard"
+    url = "https://www.zhihu.com/billboard"
 
-    content_type = None
+    accept = None
 
     type = ApiType.Zhihu
 
@@ -169,9 +169,9 @@ class PengPainHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "http://cache.thepaper.cn/contentapi/wwwIndex/rightSidebar"
+    url = "https://cache.thepaper.cn/contentapi/wwwIndex/rightSidebar"
 
-    content_type = None
+    accept = None
 
     type = ApiType.PengPai
 
@@ -183,7 +183,7 @@ class TouTiaoHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "http://www.toutiao.com/hot-event/hot-board/?origin=toutiao_pc"
+    url = "https://www.toutiao.com/hot-event/hot-board/?origin=toutiao_pc"
 
     type = ApiType.TouTiao
 
@@ -195,7 +195,7 @@ class SougouHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "http://go.ie.sogou.com/hot_ranks"
+    url = "https://go.ie.sogou.com/hot_ranks"
 
     type = ApiType.Sougou
 
@@ -207,7 +207,7 @@ class T360HotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "http://trends.so.com/top/realtime"
+    url = "https://trends.so.com/top/realtime"
 
     type = ApiType.T360
 
@@ -219,7 +219,7 @@ class DouyinHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "http://www.douyin.com/aweme/v1/web/hot/search/list/"
+    url = "https://www.douyin.com/aweme/v1/web/hot/search/list/"
 
     headers = {"Referer": "https://www.douyin.com/hot"}
 
@@ -233,7 +233,7 @@ class BilibiliHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "http://api.bilibili.com/x/web-interface/wbi/search/square?limit=50&platform=web"
+    url = "https://api.bilibili.com/x/web-interface/wbi/search/square?limit=50&platform=web"
 
     type = ApiType.Bilibili
 
@@ -245,9 +245,9 @@ class KuaiShouHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = "http://www.kuaishou.com/?isHome=1"
+    url = "https://www.kuaishou.com/?isHome=1"
 
-    content_type = None
+    accept = None
 
     type = ApiType.KuaiShou
 
@@ -259,10 +259,10 @@ class TencentNewsHotSearchApiRequest(ApiRequest):
 
     method = "GET"
 
-    url = ("http://i.news.qq.com/gw/event/pc_hot_ranking_list?ids_hash=&offset=0&page_size=50&appver=15.5_qqnews_7.1"
+    url = ("https://i.news.qq.com/gw/event/pc_hot_ranking_list?ids_hash=&offset=0&page_size=50&appver=15.5_qqnews_7.1"
            ".60&rank_id=hot")
 
-    content_type = None
+    accept = None
 
     type = ApiType.TencentNews
 
@@ -276,7 +276,7 @@ all_apis = [
     PengPainHotSearchApiRequest,
     TouTiaoHotSearchApiRequest,
     SougouHotSearchApiRequest,
-    T360HotSearchApiRequest,
+    # T360HotSearchApiRequest,
     DouyinHotSearchApiRequest,
     BilibiliHotSearchApiRequest,
     KuaiShouHotSearchApiRequest,

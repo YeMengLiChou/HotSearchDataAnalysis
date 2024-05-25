@@ -24,8 +24,8 @@ class HotSearchSpider(scrapy.Spider):
         return spider
 
     def start_requests(self):
-        apis = all_apis
-        yield from [api().get_scrapy_request(callback=self.parse) for api in apis]
+        yield from [api().get_scrapy_request(callback=self.parse) for api in all_apis]
+        # yield all_apis[0]().get_scrapy_request(callback=self.parse)
         # yield from [
         #     WeiBoHotSearchApiRequest().get_scrapy_request(callback=self.parse),
         #     WeiBoNewsApiRequest().get_scrapy_request(callback=self.parse),

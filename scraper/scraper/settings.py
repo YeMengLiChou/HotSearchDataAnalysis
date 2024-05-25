@@ -80,3 +80,5 @@ AUTOTHROTTLE_START_DELAY = get_settings("scrapy.settings.AUTOTHROTTLE_START_DELA
 
 # 最大延迟
 AUTOTHROTTLE_MAX_DELAY = get_settings("scrapy.settings.AUTOTHROTTLE_MAX_DELAY", 60)
+
+REDIRECT_ENABLED = get_settings("scrapy.settings.REDIRECT_ENABLED", True)

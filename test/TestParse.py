@@ -214,3 +214,9 @@ if __name__ == "__main__":
     test_parse_pengpai()
     test_parse_tencent()
     test_parse_sougou()
+
+    # from scraper.api import all_apis
+    # for api in all_apis:
+    #     print_json(
+    #
+    #     )
