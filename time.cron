@@ -1,1 +1,1 @@
-*/2 * * * * /bin/bash -C '/home/ecs-user/project/HotSearchDataAnalysis/exec.sh'
+*/10 * * * * /bin/bash -C '/home/ecs-user/project/HotSearchDataAnalysis/exec.sh'

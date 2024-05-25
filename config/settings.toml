@@ -10,8 +10,8 @@ port = 6379
 db = 0
 
 [kafka]
-host = "172.27.237.77"  # wsl
-#host = "172.17.160.199" # aliyun
+# host = "172.27.237.77"  # wsl
+host = "172.17.160.199" # aliyun
 port = 9092
 
 # ====================== scrapy ======================
@@ -36,7 +36,7 @@ CONCURRENT_ITEMS = 64
 # 请求并发数
 CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # 重试次数
-RETRY_TIMES = 0
+RETRY_TIMES = 3
 # 最大线程池大小
 REACTOR_THREADPOOL_MAXSIZE = 32
 # 自动调节
