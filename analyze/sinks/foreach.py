@@ -1,8 +1,8 @@
 from pyspark.sql import DataFrame, Row
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta, abstractmethod, ABC
 
 
-class ForeachWriter(ABCMeta):
+class ForeachWriter(ABC):
     """
     用于 ``streaming.foreach`` 的基类
     """

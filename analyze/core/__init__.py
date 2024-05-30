@@ -1,5 +1,7 @@
-from weibo.weibo_hot import parse as parse_wei_hot_df
+from .weibo.weibo_hot import analyze as analyze_wei_hot_df
+from .BaiduAnalyze import analyze as analyze_baidu_df
 
 __all__ = [
-    "parse_wei_hot_df"
+    "analyze_wei_hot_df",
+    "analyze_baidu_df",
 ]
