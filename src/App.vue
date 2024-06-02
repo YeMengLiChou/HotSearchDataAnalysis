@@ -1,47 +1,45 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+<script>
+import CommonHeader from '@/components/CommonHeader.vue'
+import CommonAside from '@/components/CommonAside.vue'
+import CommonTag from '@/components/CommonTag.vue'
+export default {
+  data() {
+    return {
+
+    };
+  },
+  components:{
+    CommonHeader,
+    CommonAside,
+    CommonTag
+  },
+  mounted() {
+  } ,
+  methods:{
+
+  }
+}
 </script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="common-layout">
+    <el-container>
+      <el-header style="background-color: red">title</el-header>
+      <el-container style="max-height: 100vh">
+        <el-aside class="aside"><CommonAside/></el-aside>
+        <el-main class="main"><router-view/></el-main>
+      </el-container>
+    </el-container>
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
+.aside{
+  background-color: #1F2339;
+  width: fit-content;
+  height: 100vh;
+  overflow: hidden;
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.main{
+  background-color: #081023
 }
 </style>
