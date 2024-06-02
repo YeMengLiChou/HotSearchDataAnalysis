@@ -28,6 +28,8 @@ export default {
 </script>
 
 <style scoped>
-
+.common-layout{
+  color: white;
+}
 
 </style>

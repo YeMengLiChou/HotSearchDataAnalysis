@@ -23,7 +23,7 @@ export default {
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header style="background-color: red">title</el-header>
+      <el-header class="header"> <common-header/> </el-header>
       <el-container style="max-height: 100vh">
         <el-aside class="aside"><CommonAside/></el-aside>
         <el-main class="main"><router-view/></el-main>
@@ -41,5 +41,9 @@ export default {
 }
 .main{
   background-color: #081023
+}
+.header{
+  background-color: #1F2339;
+  padding: 10px;
 }
 </style>
