@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "echarts": "^5.5.0",
+    "echarts-wordcloud": "^2.1.0",
     "element-plus": "^2.7.4",
     "less": "^4.2.0",
     "vue": "^3.4.15",
