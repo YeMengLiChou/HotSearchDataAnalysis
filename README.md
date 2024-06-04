@@ -8,6 +8,7 @@ Kafka + Scrapy + Redis：爬虫部分实现
 
 # Branch
 - `feat-scrape`：爬虫部分实现
+- `feat-analyze` 数据分析部分实现
 
 # 爬虫运行
 
@@ -33,4 +34,28 @@ crontab -u <your-user> <project-dir>/time.cron
 ```cronexp
 */10 * * * * /bin/bash -C '<your-path>/HotSearchDataAnalysis/exec.sh'
 ```
+----
+
+
+# 数据分析
+使用 Spark 3.5.1 和 scala 2.13 版本
+
+## Spark 
+### Windows 环境
+Spark 配置好，不需要 Hadoop 配置，需要创建文件夹 `xxx/hadoop/bin`，并下载随便一个版本的 `winutils.exe` 放置在该目录下
+
+在 `config/settings.toml` 文件中指定 `spark.home` 和 `spark.hadoop_home`
+
+---
+
+## Hbase
+`happybase` 依赖的 `thriftpy2` 如果在 window 环境下无法安装，显示 required Visual C++ greater than 14.0 ...;
+
+那么需要先下载 visual studio 2019 build tools, 然后选中 c++ 桌面开发安装（可能需要重启）；
+
+完成后再安装；
+
+-----
+
+
 

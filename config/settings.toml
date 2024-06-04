@@ -10,8 +10,8 @@ port = 6379
 db = 0
 
 [kafka]
-# host = "172.27.237.77"  # wsl
-host = "172.17.160.199" # aliyun
+host = "172.27.237.77"  # wsl
+#host = "172.17.160.199" # aliyun
 port = 9092
 
 # ====================== scrapy ======================
@@ -63,5 +63,12 @@ LOG_FILE_TYPE="size"
 
 
 [spark]
+# windows
+home = "D:\\tmp\\spark\\spark-3.5.1-bin-hadoop3-scala2.13"
+hadoop_home = "D:\\tmp\\hadoop"
 # spark 读取kafka的主题
 kafka.topic = "hot_1"
+
+
+[hbase]
+host = "10.34.5.226"

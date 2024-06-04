@@ -19,9 +19,10 @@ class SparkUtils:
             )  # 配置所需要的依赖包
             # .config('spark.sql.streaming.statefulOperator.checkCorrectness.enabled', False)
             # .config("spark.streaming.kafka.maxRatePerPartition", 3000)  # 每个进程每秒最多从kafka读取的数据条数
-            # .config("spark.streaming.kafka.consumer.cache.enabled", False)  # 禁用UninterruptibleThread
+            .config(
+                "spark.streaming.kafka.consumer.cache.enabled", False
+            )  # 禁用UninterruptibleThread
             .master("local[*]")
-            .config("failOnDataLoss", False)  # 数据丢失时不会直接结束
             .getOrCreate()
         )
         session.sparkContext.setLogLevel(log_level)
@@ -29,43 +30,59 @@ class SparkUtils:
 
     @staticmethod
     def get_kafka_streaming(
-        session: SparkSession, kafka_server: str, topics: list[str]
+        session: SparkSession,
+        kafka_server: str,
+        topics: list[str],
+        starting_offsets: str | list[str] = "earliest",
     ) -> DataStreamReader:
         """
         获取 kafka 的 streaming
 
+        :param starting_offsets: 开始读取的偏移量
         :param session
         :param kafka_server
         :param topics
         :return 返回对应的 ``DataStreamReader``
         """
         topic = ".".join(topics)
+        if isinstance(starting_offsets, list):
+            starting_offsets = str(
+                {topics[i]: str(starting_offsets[i]) for i in range(len(topics))}
+            )
         kafka_options = {
             "kafka.bootstrap.servers": kafka_server,
             "subscribe": topic,
-            "startingOffsets": "earliest",
+            "startingOffsets": starting_offsets,
             "endingOffsets": "latest",
         }
         return session.readStream.format("kafka").options(**kafka_options)
 
     @staticmethod
     def get_kafka_source(
-        session: SparkSession, kafka_server: str, topics: list[str]
+        session: SparkSession,
+        kafka_server: str,
+        topics: list[str],
+        starting_offsets: str | list[str] = "earliest",
     ) -> DataFrameReader:
         """
         获取 kafka 的数据源，不是 Streaming
 
+        :param starting_offsets:
         :param session
         :param kafka_server
         :param topics
         :return 返回对应的 ``DataStreamReader``
         """
         topic = ".".join(topics)
+        if isinstance(starting_offsets, list):
+            starting_offsets = str(
+                {topics[i]: str(starting_offsets[i]) for i in range(len(topics))}
+            )
         return (
             session.read.format("kafka")
             .option("kafka.bootstrap.servers", kafka_server)
             .option("subscribe", topic)
-            .option("startingOffsets", "earliest")
+            .option("startingOffsets", starting_offsets)
         )
 
     @staticmethod

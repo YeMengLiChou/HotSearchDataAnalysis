@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 
-import scrapy
-
 
 @dataclass
 class WeiboHotSearchItem:

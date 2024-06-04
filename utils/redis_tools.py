@@ -65,3 +65,24 @@ def get_api_information(api_type: str) -> dict:
         "count": count,
         "time": parse_timestamp(time),
     }
+
+
+def update_kafka_offset(topic: str, offset: int):
+    """
+    更新 Kafka 的 offset
+    :param topic: topic 名称
+    :param offset: offset
+    """
+    _client.set(f"hot:kafka:offset:{topic}", offset)
+
+
+def get_kafka_offset(topic: str) -> int | str:
+    """
+    获取 Kafka 的 offset
+    :param topic: topic 名称
+    :return: offset
+    """
+    if offset := _client.get(f"hot:kafka:offset:{topic}"):
+        return int(offset)
+    else:
+        return "earliest"
