@@ -24,41 +24,22 @@ def _common_trending_analyze(df: DataFrame) -> DataFrame:
     |title |start_timestamp|end_timestamp|duration|summary |trending|
     +------+---------------+-------------+--------+--------+--------+
     """
-
-    window_spec = Window.partitionBy("title").orderBy("timestamp")
-
     trending_df = (
-        df.distinct()  # 去重
-        # 开始时间
-        .withColumn("start_timestamp", fn.min("timestamp").over(window_spec))
-        # 结束时间
-        .withColumn("end_timestamp", fn.max("timestamp").over(window_spec))
-        # 上榜时间
-        .withColumn("duration", fn.col("end_timestamp") - fn.col("start_timestamp"))
-        .withColumn("summary_length", fn.length("summary"))
-        .groupby("title")
+        df.groupby("title")
         .agg(
-            fn.collect_list(fn.struct("rank", "hot_num", "timestamp")).alias(
-                "trending"
-            ),
-            fn.max(fn.struct(fn.col("summary_length"), fn.col("summary"))).alias(
-                "summary_struct"
-            ),
-            fn.min("start_timestamp").alias("start_timestamp"),
-            fn.max("end_timestamp").alias("end_timestamp"),
-            fn.max("duration").alias("duration"),
+            fn.array_distinct(
+                fn.collect_list(fn.struct("rank", "hot_num", "timestamp"))
+            ).alias("trending")
         )
         .select(
             "title",
-            "start_timestamp",
-            "end_timestamp",
-            "duration",
-            "summary_struct.summary",
             "trending",
         )
     )
 
-    return trending_df
+    result_df = trending_df.join(_common_analyze(df), "title")
+
+    return result_df
 
 
 def _common_analyze(df: DataFrame) -> DataFrame:
@@ -69,6 +50,8 @@ def _common_analyze(df: DataFrame) -> DataFrame:
     """
 
     result_df = df.groupby("title").agg(
+        fn.min("timestamp").alias("start_timestamp"),
+        fn.max("timestamp").alias("end_timestamp"),
         fn.max("hot_num").alias("max_hot_num"),
         fn.min("hot_num").alias("min_hot_num"),
         fn.avg("hot_num").alias("avg_hot_num"),
@@ -87,7 +70,7 @@ def jieba_cut(text):
     :return:
     """
     words = jieba.lcut(text)
-    filter_words = [word for word in words if word not in stopwords]
+    filter_words = [word for word in words if word not in stopwords and len(word) > 1]
     return filter_words
 
 
@@ -98,8 +81,14 @@ def word_segment_analyze(df: DataFrame) -> DataFrame:
     :return:
     """
     result_df = (
-        df.withColumn("title", fn.regexp_replace("note", r"[^\u4e00-\u9fa5]", ""))
+        df
         .withColumn("words", jieba_cut("title"))
-        .select("words")
+        .select("words", "timestamp", "hot_num")
+        .withColumn("word", fn.explode("words"))
+        .select("word", "timestamp", "hot_num")
+        .groupby("timestamp")
+        .agg(
+            fn.collect_list(fn.struct("word", "hot_num")).alias("words")
+        ).select("timestamp", "words")
     )
     return result_df

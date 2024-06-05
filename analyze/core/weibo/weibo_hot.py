@@ -3,6 +3,9 @@ from pyspark.sql import functions as fn
 
 from analyze.core.common import jieba_cut
 from analyze.sinks.console import batch_to_console
+from analyze.sinks.trending import TrendingDataForeachWriter
+from analyze.sinks.wordcut import WordCutForeachWriter
+from constants.scrapy import ApiType
 
 """
 1. 上榜持续时间 max(timestamp - onboard_time)
@@ -12,8 +15,11 @@ from analyze.sinks.console import batch_to_console
 
 """
 
+__trending_sink = TrendingDataForeachWriter(api_type=ApiType.WeiBoHotSearch.value)
+__word_sink = WordCutForeachWriter(api_type=ApiType.WeiBoHotSearch.value)
 
-def analyze(df: DataFrame) -> DataFrame:
+
+def analyze(df: DataFrame):
     """ "
     保证 ``df`` 的 ``api_type`` 字段为 ApiType.WeiboHot
 
@@ -23,29 +29,17 @@ def analyze(df: DataFrame) -> DataFrame:
     +----+----+---------+-------+---+------------+---------+------+------+------+---------+
 
     """
-    # TODO 源数据写入 hbase
-
-    # df.select("")
-
-    word_segment_analyze(df)
-    return
 
     window_spec = Window.partitionBy("note").orderBy("timestamp")
 
     #  变化趋势
     trending_df = (
         df.withColumn("max_timestamp", fn.max("timestamp").over(window_spec))
-        .withColumn(
-            "duration",
-            fn.col("max_timestamp") - fn.col("onboard_time"),
-        )
         .groupby("note")
         .agg(
             fn.array_distinct(
                 fn.collect_list(
-                    fn.struct(
-                        "timestamp", "rank", "raw_hot", fn.col("num").alias("hot_num")
-                    )
+                    fn.struct("timestamp", "rank", fn.col("num").alias("hot_num"))
                 )
             ).alias(
                 "trending"
@@ -55,43 +49,35 @@ def analyze(df: DataFrame) -> DataFrame:
     )
 
     data_df = (
-        df.groupby("note", "category")
+        df.groupby("note")
         .agg(
             fn.min("onboard_time").alias("start_timestamp"),
             fn.max("timestamp").alias("end_timestamp"),
             fn.max("num").alias("max_hot_num"),
             fn.min("num").alias("min_hot_num"),
+            fn.avg("num").alias("avg_hot_num"),
             fn.max("rank").alias("max_rank"),
             fn.min("rank").alias("min_rank"),
-            fn.max("raw_hot").alias("max_raw_hot"),
-            fn.min("raw_hot").alias("min_raw_hot"),
         )
         .select(
             "note",
-            "category",
             "start_timestamp",
             "end_timestamp",
             "max_hot_num",
+            "avg_hot_num",
             "min_hot_num",
-            "max_raw_hot",
-            "min_raw_hot",
             "max_rank",
             "min_rank",
         )
     )
 
-    result_df = data_df.join(trending_df, "note")
-    batch_to_console(
-        result_df,
-    )
-    """
-    result_df 格式
-    +----+---------+---------------+-------------+-----------+-----------+-----------+-----------+--------+--------+---------+
-    |note|category |start_timestamp|end_timestamp|max_hot_num|min_hot_num|max_raw_hot|min_raw_hot|max_rank|min_rank|trending |
-    +----+---------+---------------+-------------+-----------+-----------+-----------+-----------+--------+--------+---------+
-    """
+    result_df = data_df.join(trending_df, "note").withColumnRenamed("note", "title")
+    result_df.foreach(__trending_sink.process_row)
+    batch_to_console(result_df)
 
-    return result_df
+    word_df = word_segment_analyze(df)
+    word_df.foreach(__word_sink.process_row)
+    batch_to_console(word_df)
 
 
 """
@@ -109,10 +95,17 @@ def word_segment_analyze(df: DataFrame):
     :return:
     """
     df = (
-        df.withColumn("note", fn.regexp_replace("note", r"[^\u4e00-\u9fa5]", ""))
-        .withColumn("words", jieba_cut("note"))
-        .withColumn("words", fn.explode("words"))
-        .select("timestamp", "words", "rank", "num", "raw_hot")
-        .orderBy("raw_hot")
+        df.withColumnRenamed(existing="note", new="title")
+        .withColumn("words", jieba_cut("title"))
+        .withColumn("word", fn.explode("words"))
+        .select("timestamp", "word", fn.col("num").alias("hot_num"))
+        .groupby("timestamp")
+        .agg(
+            fn.array_distinct(
+                fn.collect_list(
+                    fn.struct("word", "hot_num")
+                )
+            ).alias("words"),
+        ).select("words", "timestamp")
     )
-    batch_to_console(df, row=100)
+    return df

@@ -1,3 +1,5 @@
+import json
+
 import happybase
 from pyspark.sql import Row
 from analyze.sinks.foreach import ForeachWriter
@@ -9,12 +11,16 @@ class ScrapedForeachWriter(ForeachWriter):
     爬取源数据写入
     """
 
+    def __reduce__(self):
+        return self.__class__, ()
+
     def __init__(self):
         hbase_utils.create_table("scraped", {"items": {}})
-        self.batch: happybase.Batch | None = None
+        self.batch: happybase.Batch = hbase_utils.get_table("scraped").batch(
+            batch_size=1000
+        )
 
     def open(self, partition_id: int, epoch_id: int) -> bool:
-        self.batch = hbase_utils.get_table("scraped").batch(batch_size=1000)
         return True
 
     def process_row(self, row: Row):
@@ -24,10 +30,18 @@ class ScrapedForeachWriter(ForeachWriter):
         :param row:
         :return:
         """
-        row_key = str(row.timestamp) + ":" + str(row.api_type)
-        self.batch.put(row=row_key, data={"items:data": str(row.asDict())})
+        row_key = f"{row.api_type}:{row.timestamp}"
+        self.batch.put(
+            row=row_key,
+            data={"items:data": json.dumps(row.asDict(), ensure_ascii=False)},
+        )
 
     def close(self, error):
+        if self.batch:
+            self.batch.send()
+            self.batch = None
+
+    def __del__(self):
         if self.batch:
             self.batch.send()
             self.batch = None

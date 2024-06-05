@@ -6,13 +6,13 @@ from analyze.sinks.trending import TrendingDataForeachWriter
 from analyze.sinks.wordcut import WordCutForeachWriter
 from constants.scrapy import ApiType
 
-__trending_sink = TrendingDataForeachWriter(api_type=ApiType.Baidu.value)
-__word_cut_sink = WordCutForeachWriter(api_type=ApiType.Baidu.value)
+__trending_sink = TrendingDataForeachWriter(api_type=ApiType.KuaiShou.value)
+__word_cut_sink = WordCutForeachWriter(api_type=ApiType.KuaiShou.value)
 
 
 def analyze(df: DataFrame):
     """
-    百度热搜分析
+    快手热搜分析
     """
 
     result_df = _common_trending_analyze(df)

@@ -1,7 +1,6 @@
 import os
 
-import happybase
-from pyspark import Row
+from pyspark.sql import Row
 
 from analyze.sinks.scraped import ScrapedForeachWriter
 from config.config import get_settings
@@ -13,7 +12,6 @@ if home := get_settings("spark.home"):
 
 from pyspark.sql import DataFrame
 from analyze import schemas
-from analyze.sinks.console import batch_to_console
 from constants.scrapy import ApiType
 from utils.spark_utils import SparkUtils
 from pyspark.sql import functions as func
@@ -75,8 +73,8 @@ def filter_by_api_type(df: DataFrame, api_type: int, schema) -> DataFrame:
 
 
 def dispatcher(df: DataFrame):
-    # 写入 hbase
-    df.foreach(ScrapedForeachWriter().process_row)
+    # 元数据写入 hbase
+    # df.foreach(ScrapedForeachWriter().process_row)
 
     # 微博热搜榜
     core.analyze_wei_hot_df(
@@ -92,6 +90,78 @@ def dispatcher(df: DataFrame):
         df=filter_by_api_type(
             df=df,
             api_type=ApiType.Baidu.value,
+            schema=schemas.CommonHotSearchItemSchema,
+        )
+    )
+
+    # 知乎热搜
+    core.analyze_zhihu_df(
+        df=filter_by_api_type(
+            df=df,
+            api_type=ApiType.Zhihu.value,
+            schema=schemas.CommonHotSearchItemSchema,
+        )
+    )
+
+    # 澎湃热搜
+    core.analyze_peng_pai_df(
+        df=filter_by_api_type(
+            df=source,
+            api_type=ApiType.PengPai.value,
+            schema=schemas.PengpaiHotSearchItemSchema,
+        )
+    )
+
+    # 今日头条热搜
+    core.analyze_tou_tiao(
+        df=filter_by_api_type(
+            df=df,
+            api_type=ApiType.TouTiao.value,
+            schema=schemas.CommonHotSearchItemSchema,
+        )
+    )
+
+    # 搜狗
+    core.analyze_sougou(
+        df=filter_by_api_type(
+            df=df,
+            api_type=ApiType.Sougou.value,
+            schema=schemas.CommonHotSearchItemSchema,
+        )
+    )
+
+    # 抖音
+    core.analyze_douyin(
+        df=filter_by_api_type(
+            df=df,
+            api_type=ApiType.Douyin.value,
+            schema=schemas.DouyinHotSearchItemSchema,
+        )
+    )
+
+    # bilibili
+    core.analyze_bilibili(
+        df=filter_by_api_type(
+            df=df,
+            api_type=ApiType.Bilibili.value,
+            schema=schemas.CommonHotSearchNoValueItemSchema,
+        )
+    )
+
+    # 快手
+    core.analyze_kuaishou(
+        df=filter_by_api_type(
+            df=df,
+            api_type=ApiType.KuaiShou.value,
+            schema=schemas.CommonHotSearchItemSchema,
+        )
+    )
+
+    # 腾讯新闻
+    core.analyze_tencent_news(
+        df=filter_by_api_type(
+            df=df,
+            api_type=ApiType.TencentNews.value,
             schema=schemas.CommonHotSearchItemSchema,
         )
     )

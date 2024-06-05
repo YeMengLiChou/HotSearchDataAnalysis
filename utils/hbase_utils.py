@@ -8,7 +8,11 @@ from threading import Lock
 _lock = Lock()
 
 with _lock:
-    _conn = happybase.Connection(host=get_settings("hbase.host"), autoconnect=False)
+    _conn = happybase.Connection(
+        host=get_settings("hbase.host"),
+        port=get_settings("hbase.port"),
+        autoconnect=False,
+    )
     _conn.open()
 
 
@@ -64,13 +68,18 @@ def get_table(table_name: str) -> happybase.Table:
 if __name__ == "__main__":
     print(_conn.tables())
     # _conn.create_table("test1", {"cf1": {}, "cf2": {}})
-    # create_table("test", ["cf1", "cf2"])
-    put(
-        "scraped",
-        "1716657002576:4",
-        {"items:data": "{'api_type': 4, 'data': [], 'timestamp': 1716657002576}"},
-    )
-    # print(_conn.table("test").families())
-    table = _conn.table("scraped")
-    for item in table.scan():
-        print(item)
+    # # create_table("test", ["cf1", "cf2"])
+    # put(
+    #     "test1",
+    #     "123",
+    #     {"cf1:a": "haha"}
+    # )
+    # # put(
+    # #     "scraped",
+    # #     "1716657002576:4",
+    # #     {"items:data": "{'api_type': 4, 'data': [], 'timestamp': 1716657002576}"},
+    # # )
+    # # print(_conn.table("test").families())
+    # table = _conn.table("test1")
+    # for item in table.scan():
+    #     print(item)
