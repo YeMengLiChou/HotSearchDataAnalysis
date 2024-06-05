@@ -41,10 +41,10 @@
     right: null,
     bottom: null,
     // 词云文本大小范围,  默认为最小12像素，最大60像素
-    sizeRange: [12, 50],
+    sizeRange: [12, 60],
     // 词云文字旋转范围和步长。 文本将通过旋转在[-90，90]范围内随机旋转步骤45
     // 如果都设置为 0 , 则是水平显示
-    rotationRange: [-90, 90],
+    rotationRange: [0, 0],
     rotationStep: 45,
     /**
      * 词间距, 距离越大，单词之间的间距越大, 单位像素
@@ -121,7 +121,7 @@
 #chart-cloud{
   width: 50%;
   height: 50%;
-  background-color: aqua;
+  background-color: white;
   margin: 0 auto;
 }
 </style>
