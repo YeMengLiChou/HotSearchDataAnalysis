@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import {reactive, ref, onMounted, watch, nextTick} from 'vue'
+import {reactive, ref, onMounted, watch, nextTick, toRaw} from 'vue'
 import {defineEmits} from 'vue'
 import HeatCurveEntry from "@/components/HeatCurveEntry.vue";
 import * as echarts from "echarts/core";
+import {getTrendingData} from "@/api/anaylze"
+
 const emits = defineEmits(['sendDate'])
 const size = ref<'default' | 'large' | 'small'>('default')
 const props = defineProps({
@@ -19,10 +21,16 @@ const sendDate= () => {
   }
   emits('sendDate', params)
 }
-
+let listData = ref([])
 watch(() => props.data, async () => {
   await nextTick();
-  console.log(props.data)
+  const data = toRaw(props.data)
+  listData.value = data[0].data
+  // console.log(data[0].data)
+  for (const dataKey in data[0].data) {
+    console.log(data[0].data[dataKey])
+  }
+
   if (props.data) {
     DrawCategory(props.data, props.data.length);
   }
@@ -120,7 +128,6 @@ function DrawCategory(data:any,len:number) {
 </script>
 
 <template>
-  {{data}}
   <div class="common-list">
     <div class="query-time-table">
       <div class="date-picker">
@@ -137,9 +144,9 @@ function DrawCategory(data:any,len:number) {
       </div>
     </div>
     <el-collapse accordion >
-      <el-collapse-item v-for="i in data"  >
+      <el-collapse-item v-for="i in listData"  >
         <template #title>
-          <div class="hot-list-item-id">{{i.rank}}</div>
+          <div class="hot-list-item-id">{{i.rank+1}}</div>
           <div> {{i.title}}</div>
         </template>
         <div class="hot-list-item-info" >
