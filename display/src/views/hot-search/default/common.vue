@@ -35,13 +35,19 @@ const state = ref({
   }
 });
 
-const queryTime = ref(0);
+const queryStartTime = ref(0);
+const queryEndTime = ref(0);
 
-const getDate = val => {
-  queryTime.value = parseInt(val.date);
-  console.log(queryTime.value);
-  queryData(queryTime.value, queryTime.value + 86400000);
-  queryWordCut(queryTime.value, queryTime.value + 86400000);
+const getDate = (value) => {
+  queryStartTime.value = parseInt(value.startDate);
+  if (value.endDate.length != 0) {
+    queryEndTime.value = parseInt(value.endDate);
+  } else {
+    queryEndTime.value = queryStartTime.value + 86400000;
+  }
+  console.log(queryStartTime.value, queryEndTime.value);
+  queryData(queryStartTime.value, queryEndTime.value);
+  queryWordCut(queryStartTime.value, queryEndTime.value);
 };
 
 // 数据列表
