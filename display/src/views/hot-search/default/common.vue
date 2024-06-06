@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import ChartWordCloud from "../../../components/charts/ChartWordCloud.vue";
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import HotDataList from "@/components/charts/HotDataList.vue";
-import { ApiType, getHotSearchOriginData } from "@/api/anaylze";
+import {
+  ApiType,
+  WordCloudHotNumItem,
+  getHotSearchOriginData,
+  getWordCloudHotNum
+} from "@/api/anaylze";
 import { integer } from "vue-types";
+import { ElMessage } from "element-plus";
 defineOptions({
   name: "common"
 });
@@ -17,38 +23,32 @@ const props = defineProps({
   }
 });
 
-const state = reactive({
+// 分析数据
+const state = ref({
   chartOptions: {
     series: [
       {
         gridSize: 20,
-        data: [
-          { name: "娜娜米", value: 30 },
-          { name: "五条悟", value: 30 },
-          { name: "狗卷", value: 28 },
-          { name: "Shoto", value: 28 },
-          { name: "Vox", value: 25 },
-          { name: "Aza", value: 23 },
-          { name: "Mysta", value: 20 },
-          { name: "Uki", value: 18 },
-          { name: "Luca", value: 15 },
-          { name: "Shu", value: 10 },
-          { name: "Ike", value: 10 },
-          { name: "Fulgun", value: 10 }
-        ]
+        data: []
       }
     ]
   }
 });
 
-const queryTime = ref("");
-const getDate = val => {
-  queryTime.value = val.date;
+const queryTime = ref(0);
+
+
+
+const getDate = (val) => {
+  queryTime.value = parseInt(val.date);
   console.log(queryTime.value);
   queryData(queryTime.value, queryTime.value + 86400000);
+  queryWordCut(queryTime.value, queryTime.value + 86400000);
 };
 
+// 数据列表
 const dataList = ref(null);
+
 
 const queryData = (start: any, end: any) => {
   console.log(start, end);
@@ -58,6 +58,56 @@ const queryData = (start: any, end: any) => {
     })
     .catch(err => {
       console.log(err);
+    });
+};
+
+type Item = {
+  name: string;
+  value: number;
+};
+
+const transformWordCloud = (data: WordCloudHotNumItem[]) => {
+  const items: Array<Item> = [];
+  data.forEach(item => {
+    item.words.forEach(item1 => {
+      items.push({
+        name: item1.word,
+        value: item1.hot_num
+      });
+    });
+  });
+  return {
+    chartOptions: {
+      series: [
+        {
+          gridSize: 20,
+          data: items
+        }
+      ]
+    }
+  };
+};
+
+// 请求分词数据
+const queryWordCut = (start: number, end: number) => {
+  getWordCloudHotNum(props.apiType, start, end)
+    .then(res => {
+      if (res.code == 200) {
+        console.log(res.data);
+        state.value = transformWordCloud(res.data);
+      } else {
+        ElMessage({
+          message: res.msg,
+          type: "error"
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      ElMessage({
+        message: err,
+        type: "error"
+      });
     });
 };
 </script>
