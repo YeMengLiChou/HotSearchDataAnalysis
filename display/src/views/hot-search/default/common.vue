@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ChartWordCloud from "../../../components/charts/ChartWordCloud.vue";
+<<<<<<< HEAD
 import { onMounted, reactive, ref } from "vue";
 import HotDataList from "@/components/charts/HotDataList.vue";
 import {
@@ -8,6 +9,11 @@ import {
   getHotSearchOriginData,
   getWordCloudHotNum
 } from "@/api/anaylze";
+=======
+import {onMounted, reactive, ref} from "vue";
+import HotDataList from "@/components/charts/HotDataList.vue";
+import { ApiType, getHotSearchOriginData,getTrendingData } from "@/api/anaylze";
+>>>>>>> refs/remotes/origin/feat-display
 import { integer } from "vue-types";
 import { ElMessage } from "element-plus";
 defineOptions({
@@ -48,8 +54,9 @@ const getDate = (val) => {
 
 // 数据列表
 const dataList = ref(null);
-
-
+onMounted(()=>{
+  queryData(new Date().setHours(0, 0, 0, 0), new Date().setHours(0, 0, 0, 0) + 86400000);
+})
 const queryData = (start: any, end: any) => {
   console.log(start, end);
   getHotSearchOriginData(props.apiType, start, end)
@@ -115,7 +122,7 @@ const queryWordCut = (start: number, end: number) => {
 <template>
   <div>
     <div class="weibo-common">
-      <HotDataList @sendDate="getDate" :data="dataList" />
+      <HotDataList @sendDate="getDate" :data="dataList" :api-type="props.apiType"/>
     </div>
     <div class="blank" />
     <ChartWordCloud
