@@ -1,16 +1,20 @@
 <script setup lang="ts">
-  import * as echarts from 'echarts';
-  import 'echarts-wordcloud'
-  import {onMounted, ref} from "vue";
-  import merge from "lodash/merge";
-  const props = withDefaults(
-      defineProps<{
-        options: any
-      }>(),
-      {},
-  )
-  const defaultSeries = [{
-    type: 'wordCloud',
+import * as echarts from "echarts";
+import "echarts-wordcloud";
+import { onMounted, ref } from "vue";
+import merge from "lodash/merge";
+import { useECharts } from "@pureadmin/utils";
+
+const props = withDefaults(
+  defineProps<{
+    options: any;
+  }>(),
+  {}
+);
+
+const defaultSeries = [
+  {
+    type: "wordCloud",
     /**
      * 绘制词云的形状, 值为回调函数 或 关键字, 默认 circle
      *  关键字:
@@ -23,7 +27,7 @@
      * pentagon（五边形）
      * star（星形）
      */
-    shape: 'circle',
+    shape: "circle",
     // 保持 maskImage 的纵横比或形状的纵横比为 1：1
     keepAspect: false,
     /**
@@ -34,10 +38,10 @@
     // maskImage: maskImage,
 
     // 词云整个图表放置的位置 和 尺寸大小
-    left: 'center',
-    top: 'center',
-    width: '50%',
-    height: '100%',
+    left: "center",
+    top: "center",
+    width: "50%",
+    height: "100%",
     right: null,
     bottom: null,
     // 词云文本大小范围,  默认为最小12像素，最大60像素
@@ -60,65 +64,69 @@
     layoutAnimation: true,
     // 这是全局的文字样式，相对应的还可以对每个词设置字体样式
     textStyle: {
-      fontFamily: 'sans-serif',
-      fontWeight: 'bold',
+      fontFamily: "sans-serif",
+      fontWeight: "bold",
       // 颜色可以用一个函数来返回字符串
       color: function () {
         // 随机颜色
         return (
-            'rgb(' +
-            [
-              Math.round(Math.random() * 160),
-              Math.round(Math.random() * 160),
-              Math.round(Math.random() * 160),
-            ].join(',') +
-            ')'
-        )
-      },
+          "rgb(" +
+          [
+            Math.round(Math.random() * 160),
+            Math.round(Math.random() * 160),
+            Math.round(Math.random() * 160)
+          ].join(",") +
+          ")"
+        );
+      }
     },
     // 鼠标hover的特效样式
     emphasis: {
-      focus: 'self',
+      focus: "self",
       textStyle: {
         textShadowBlur: 10,
-        textShadowColor: '#999'
+        textShadowColor: "#999"
       }
     },
     /**
-     * 词云数据，必须是一个数组，每个数组项必须有name和value属性
-     * 设置单个文本的样式：  textStyle
-     *
-     * 例：{
-     name: '',
-     value: 40,
-     textStyle: {
-     }
-     },
-     */
+   * 词云数据，必须是一个数组，每个数组项必须有name和value属性
+   * 设置单个文本的样式：  textStyle
+   *
+   * 例：{
+   name: '',
+    value: 40,
+    textStyle: {
+    }
+    },
+    */
     data: []
-  }]
-  let seriesData = props.options.series;
-  const series = merge({},seriesData[0],defaultSeries[0]) // {}表示合并后的新对象，可以传入一个空对象作为初始值
-
-  function DrawWordCloud() {
-    // 词云
-    let mychart = echarts.init(document.getElementById("chart-cloud")) // 可以设置主题色'dark'
-    mychart.setOption({
-      series: series
-    })
   }
+];
 
-  onMounted(() => {
-    DrawWordCloud()
-  })
+let seriesData = props.options.series;
+const series = merge({}, seriesData[0], defaultSeries[0]); // {}表示合并后的新对象，可以传入一个空对象作为初始值
+
+// 绑定 chartCloud 元素
+const chartCloud = ref();
+const { setOptions } = useECharts(chartCloud);
+
+function DrawWordCloud() {
+  // 词云
+  setOptions(series);
+  
+}
+
+onMounted(() => {
+  DrawWordCloud();
+});
 </script>
 
 <template>
-  <div id="chart-cloud"></div>
+  <div ref="chartCloud" id="chart-cloud"></div>
 </template>
 
 <style scoped>
-#chart-cloud{
+#chart-cloud {
   width: 50%;
   height: 50%;
   background-color: white;

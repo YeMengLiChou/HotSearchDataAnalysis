@@ -6,6 +6,7 @@ import { UniversalTransition } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
 import {onMounted, ref} from "vue";
 import merge from "lodash/merge";
+import { useECharts } from '@pureadmin/utils';
 echarts.use([GridComponent, ScatterChart, CanvasRenderer, UniversalTransition]);
 
 const props = withDefaults(
@@ -23,11 +24,15 @@ const defaultSeries = [
 ]
 let seriesData = props.options.series || defaultSeries;
 
+const chartCategory = ref()
+const { setOptions } = useECharts(chartCategory)
+
 function DrawCategory() {
   // 词云
-  let mychart = echarts.init(document.querySelector("#chart-category"))
+  // let mychart = echarts.init(document.querySelector("#chart-category"))
   // let mychart = echarts.init(document.getElementById("chart-category")) // 可以设置主题色'dark'
-  mychart.setOption({
+
+  setOptions({
 
     grid: {
       left: '3%',
@@ -54,7 +59,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="chart-category"></div>
+  <div id="chart-category" ref="chartCategory"></div>
 </template>
 
 <style scoped>
