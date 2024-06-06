@@ -2,10 +2,10 @@
   <div class="aside-menu">
     <el-switch v-model="isCollapse" class="switch">
       <template #active-action>
-        <span class="custom-active-action">T</span>
+        <span class="custom-active-action"></span>
       </template>
       <template #inactive-action>
-        <span class="custom-inactive-action">F</span>
+        <span class="custom-inactive-action"></span>
       </template>
     </el-switch>
     <el-menu
@@ -26,6 +26,27 @@
         <el-icon><icon-menu /></el-icon>
         <span>微博</span>
       </el-menu-item>
+      <el-menu-item index="/baidu">
+        <el-icon><icon-menu /></el-icon>
+        <span>百度</span>
+      </el-menu-item>
+      <el-menu-item index="/pengpai">
+      <el-icon><icon-menu /></el-icon>
+      <span>澎湃</span>
+    </el-menu-item>
+      <el-menu-item index="/sougou">
+        <el-icon><icon-menu /></el-icon>
+        <span>搜狗</span>
+      </el-menu-item>
+      <el-menu-item index="/toutiao">
+        <el-icon><icon-menu /></el-icon>
+        <span>头条</span>
+      </el-menu-item>
+      <el-menu-item index="/zhihu">
+        <el-icon><icon-menu /></el-icon>
+        <span>知乎</span>
+      </el-menu-item>
+
     </el-menu>
   </div>
 </template>
@@ -60,9 +81,9 @@ const handleSelect= (key: string, keyPath: string[]) => {
   overflow: hidden;
 }
 .switch{
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%);
+  margin-left: 20px;
+  display: flex;
+  justify-content: flex-start;
 }
 --el-switch-on-color{
   background-color: #1F2339;

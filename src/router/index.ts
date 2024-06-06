@@ -3,9 +3,19 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 // 引入测试页面
 import defaultPage from './modules/default'
 import weiboPage from './modules/weibo'
+import baiduPage from './modules/baidu'
+import pengpai from "./modules/pengpai";
+import sougou from "./modules/sougou";
+import toutiao from "./modules/toutiao";
+import zhihu from "./modules/zhihu";
 export const publicRoutes: Array<RouteRecordRaw> = [
     ...defaultPage,
-    ...weiboPage
+    ...weiboPage,
+    ...toutiao,
+    ...sougou,
+    ...pengpai,
+    ...zhihu,
+    ...baiduPage,
 ];
 
 const router = createRouter({
