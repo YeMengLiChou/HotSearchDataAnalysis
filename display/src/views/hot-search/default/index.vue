@@ -2,7 +2,7 @@
 import ChartWordCloud from "../../../components/charts/ChartWordCloud.vue"
 import {reactive, ref} from "vue";
 import HotDataList from "@/components/charts/HotDataList.vue";
-import {http} from "@/utils/http";
+import {ApiType, getHotSearchOriginData} from "@/api/anaylze";
 import {integer} from "vue-types";
 defineOptions({
   name: 'default'
@@ -35,69 +35,28 @@ const getDate = (val)=>{
   queryTime.value = val.date
   console.log(queryTime.value)
   queryData(queryTime.value,queryTime.value+86400000)
-  state.chartOptions.series =
-    {
-      ...state.chartOptions.series,
 
-    }
 }
 
 const queryData = (start:any,end:any)=>{
-  const param = {
-    start:start,
-    end:end
-  }
-  http.request("get","/api/hot/1",param).then(res=>{
-    console.log(res)
+  console.log(start,end)
+  getHotSearchOriginData(ApiType.WeiBoHotSearch,start,end).then(res=>{
+
+    dataList = res.data
+    console.log(dataList)
   }).catch(err=>{
     console.log(err)
   })
 }
 
-const dataList = reactive({
-  data:[
-      {
-        title:'热搜词1',key:'1',id:'1',
-        data:[
-          {
-            smooth: true,
-            name: '政治',
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: 'line'
-          },
-          {
-            smooth: true,
-            name: '科技',
-            data: [120, 532, 301, 634, 1190, 1830, 2320],
-            type: 'line'
-          }
-        ]
-      },
-      {
-        title:'热搜词2',key:'2',id:'2',
-        data:[
-          {
-            smooth: true,
-            name: '政治',
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: 'line'
-          },
-          {
-            smooth: true,
-            name: '科技',
-            data: [120, 532, 301, 634, 1190, 1830, 2320],
-            type: 'line'
-          }
-        ]
-      }
-    ]
-})
+let dataList = reactive({})
+
 </script>
 
 <template>
   <div>
     <div class="weibo-common">
-      <HotDataList @sendDate="getDate" :data="dataList.data" />
+      <HotDataList @sendDate="getDate" :data="dataList" />
     </div>
     <div class="blank" />
     <ChartWordCloud :options="state.chartOptions" class="chart-cloud"></ChartWordCloud>

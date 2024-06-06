@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {reactive, ref,onMounted} from 'vue'
+import {reactive, ref, onMounted, watch} from 'vue'
 import {defineEmits} from 'vue'
 import HeatCurveEntry from "@/components/HeatCurveEntry.vue";
 import * as echarts from "echarts/core";
@@ -8,9 +8,10 @@ const size = ref<'default' | 'large' | 'small'>('default')
 const props = defineProps({
   data:{
     type:Object,
-    default:[]
+    default: {}
   }
 })
+
 const value2 = ref('')
 const sendDate= () => {
   let params = {
@@ -21,7 +22,6 @@ const sendDate= () => {
 const data = props.data
 
 onMounted(() =>{
-  console.log(data)
   DrawCategory(data,data.length)
 })
 const shortcuts = [
@@ -114,6 +114,7 @@ function DrawCategory(data:any,len:number) {
 </script>
 
 <template>
+  {{data}}
   <div class="common-list">
     <div class="query-time-table">
       <div class="date-picker">
@@ -130,9 +131,9 @@ function DrawCategory(data:any,len:number) {
       </div>
     </div>
     <el-collapse accordion >
-      <el-collapse-item v-for="i in data" >
+      <el-collapse-item v-for="i in data"  >
         <template #title>
-          <div class="hot-list-item-id">{{i.id}}</div>
+          <div class="hot-list-item-id">{{i.rank}}</div>
           <div> {{i.title}}</div>
         </template>
         <div class="hot-list-item-info" >
