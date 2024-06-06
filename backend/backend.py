@@ -85,69 +85,6 @@ def get_hot_data(api_type):
     )
 
 
-# 百度热搜
-@app.get("/hot/baidu")
-def get_hot_baidu():
-    # 从 url 读取参数
-    start_time = request.args.get("start")
-    end_time = request.args.get("end")
-    app.logger.info(f"start={start_time}, end={end_time}")
-
-    # 从hbase读取
-    table = hbase_utils.get_table("scraped")
-    data = []
-    for cell in table.scan(row_start=f"{ApiType.Baidu.value}:{start_time}",
-                           row_stop=f"{ApiType.Baidu.value}:{end_time}",
-                           columns=["items:data"]):
-        row_key = cell[0].decode('utf-8')
-
-        # 解码单元格数据，将其转换为字典格式，以便后续处理和使用
-        row_data: dict = decode_dict(cell[1])
-
-        # 将字符串形式的JSON数据转换为Python对象
-        # 解析row_data中特定字段的JSON字符串，移除单引号以兼容JSON格式
-        item = json.loads(row_data["items:data"].replace("'", ""))
-
-        # 将item中'data'字段的每个字符串元素转换为Python对象
-        # 通过列表推导式对item['data']中的每个JSON字符串进行解析
-        item_data = [json.loads(x) for x in item['data']]
-
-        # 重新构造每个条目的数据结构, 把获取到的数据 转为前端所需要的格式
-        transformed_data = []
-        # 在前11条信息中提取数据 转为前端所需要的格式,返回前15条是因为,对于百度的接口来说,第一条数据是置顶的
-        for d in item_data[:16]:
-            transformed_data.append({
-                "title": d["title"],
-                "rank": d["rank"],
-                "time": item["timestamp"],
-                "hot_num": [{
-                    "num": d["hot_num"],
-                    "time": item["timestamp"]  # 使用外部的时间戳
-                }]
-            })
-
-        # 构造每个平台的数据结构
-        platform_data = {
-            "platform": ApiType.Baidu.value,  # 添加平台信息
-            "time": item["timestamp"],
-            "data": transformed_data
-        }
-
-        data.append(platform_data)
-    response_data = ApiResult(
-        code=200,
-        msg="success",
-        data=data
-    ).__dict__
-
-    # 使用 ensure_ascii=False 和 indent 来生成格式化的 JSON 响应
-    return app.response_class(
-        response=json.dumps(response_data, ensure_ascii=False, indent=4),
-        status=200,
-        mimetype='application/json'
-    )
-
-
 # 微博热搜
 @app.get("/hot/weibo")
 def get_hot_weibo():
@@ -183,10 +120,7 @@ def get_hot_weibo():
                 "title": d["note"],
                 "rank": d["rank"],
                 "time": item["timestamp"],
-                "hot_num": [{
-                    "num": d["num"],
-                    "time": item["timestamp"]  # 使用外部的时间戳
-                }]
+                "hot_num": d["num"]
             })
 
         # 构造每个平台的数据结构
@@ -246,10 +180,7 @@ def get_hot_weibo_news():
                 "title": d["topic"],
                 "rank": d["rank"],
                 "time": item["timestamp"],
-                "hot_num": [{
-                    "num": d["read"],
-                    "time": item["timestamp"]  # 使用外部的时间戳
-                }]
+                "hot_num": d["read"]
             })
 
         # 构造每个平台的数据结构
@@ -309,15 +240,72 @@ def get_hot_weibo_entertainment():
                 "title": d["note"],
                 "rank": d["rank"],
                 "time": item["timestamp"],
-                "hot_num": [{
-                    "num": d["hot_num"],
-                    "time": item["timestamp"]  # 使用外部的时间戳
-                }]
+                "hot_num": d["hot_num"]
+
             })
 
         # 构造每个平台的数据结构
         platform_data = {
             "platform": item["api_type"],  # 添加平台信息
+            "time": item["timestamp"],
+            "data": transformed_data
+        }
+
+        data.append(platform_data)
+    response_data = ApiResult(
+        code=200,
+        msg="success",
+        data=data
+    ).__dict__
+
+    # 使用 ensure_ascii=False 和 indent 来生成格式化的 JSON 响应
+    return app.response_class(
+        response=json.dumps(response_data, ensure_ascii=False, indent=4),
+        status=200,
+        mimetype='application/json'
+    )
+
+
+@app.get("/hot/baidu")
+def get_hot_baidu():
+    # 从 url 读取参数
+    start_time = request.args.get("start")
+    end_time = request.args.get("end")
+    app.logger.info(f"start={start_time}, end={end_time}")
+
+    # 从hbase读取
+    table = hbase_utils.get_table("scraped")
+    data = []
+    for cell in table.scan(row_start=f"{ApiType.Baidu.value}:{start_time}",
+                           row_stop=f"{ApiType.Baidu.value}:{end_time}",
+                           columns=["items:data"]):
+        row_key = cell[0].decode('utf-8')
+
+        # 解码单元格数据，将其转换为字典格式，以便后续处理和使用
+        row_data: dict = decode_dict(cell[1])
+
+        # 将字符串形式的JSON数据转换为Python对象
+        # 解析row_data中特定字段的JSON字符串，移除单引号以兼容JSON格式
+        item = json.loads(row_data["items:data"].replace("'", ""))
+
+        # 将item中'data'字段的每个字符串元素转换为Python对象
+        # 通过列表推导式对item['data']中的每个JSON字符串进行解析
+        item_data = [json.loads(x) for x in item['data']]
+
+        # 重新构造每个条目的数据结构, 把获取到的数据 转为前端所需要的格式
+        transformed_data = []
+        # 在前11条信息中提取数据 转为前端所需要的格式,返回前15条是因为,对于百度的接口来说,第一条数据是置顶的
+        for d in item_data[:16]:
+            transformed_data.append({
+                "title": d["title"],
+                "rank": d["rank"],
+                "time": item["timestamp"],
+                "hot_num": d["hot_num"]
+            })
+
+        # 构造每个平台的数据结构
+        platform_data = {
+            "platform": ApiType.Baidu.value,  # 添加平台信息
             "time": item["timestamp"],
             "data": transformed_data
         }
@@ -372,10 +360,8 @@ def get_hot_zhihu():
                 "title": d["title"],
                 "rank": d["rank"],
                 "time": item["timestamp"],
-                "hot_num": [{
-                    "num": d["hot_num"],
-                    "time": item["timestamp"]  # 使用外部的时间戳
-                }]
+                "hot_num": d["hot_num"]
+
             })
 
         # 构造每个平台的数据结构
@@ -435,10 +421,7 @@ def get_hot_pengpai():
                 "title": d["title"],
                 "rank": d["rank"],
                 "time": item["timestamp"],
-                "hot_num": [{
-                    "num": '',
-                    "time": item["timestamp"]  # 使用外部的时间戳
-                }]
+                "hot_num": None
             })
 
         # 构造每个平台的数据结构
@@ -498,10 +481,8 @@ def get_hot_toutiao():
                 "title": d["title"],
                 "rank": d["rank"],
                 "time": item["timestamp"],
-                "hot_num": [{
-                    "num": d['hot_num'],
-                    "time": item["timestamp"]  # 使用外部的时间戳
-                }]
+                "hot_num": d['hot_num']
+
             })
 
         # 构造每个平台的数据结构
@@ -561,10 +542,8 @@ def get_hot_sougou():
                 "title": d["title"],
                 "rank": d["rank"],
                 "time": item["timestamp"],
-                "hot_num": [{
-                    "num": d['hot_num'],
-                    "time": item["timestamp"]  # 使用外部的时间戳
-                }]
+                "hot_num": d['hot_num']
+
             })
 
         # 构造每个平台的数据结构
@@ -624,10 +603,7 @@ def get_hot_douyin():
                 "title": d["word"],
                 "rank": d["rank"],
                 "time": item["timestamp"],
-                "hot_num": [{
-                    "num": d['hot_num'],
-                    "time": item["timestamp"]  # 使用外部的时间戳
-                }]
+                "hot_num": d['hot_num']
             })
 
         # 构造每个平台的数据结构
@@ -687,10 +663,8 @@ def get_hot_bilibili():
                 "title": d["title"],
                 "rank": d["rank"],
                 "time": item["timestamp"],
-                "hot_num": [{
-                    "num": '',
-                    "time": item["timestamp"]  # 使用外部的时间戳
-                }]
+                "hot_num": None
+
             })
 
         # 构造每个平台的数据结构
@@ -750,10 +724,7 @@ def get_hot_kuaishou():
                 "title": d["title"],
                 "rank": d["rank"],
                 "time": item["timestamp"],
-                "hot_num": [{
-                    "num": d['hot_num'],
-                    "time": item["timestamp"]  # 使用外部的时间戳
-                }]
+                "hot_num": d['hot_num']
             })
 
         # 构造每个平台的数据结构
@@ -779,6 +750,14 @@ def get_hot_kuaishou():
 
 
 # 腾讯热搜
+"""
+我觉得这部分,可以写一个处理函数,不用重新开一个路由写,就是判断apitype,调用对应的处理函数
+如何? 能实现就行了 规范就不管了 我写的时候也考虑过 
+我加个判断吧,你把那个格式改一下,去掉那个列表,直接 hot_num 就好了
+行
+"""
+
+
 @app.get("/hot/tencent")
 def get_hot_tencent():
     # 从 url 读取参数
@@ -813,10 +792,8 @@ def get_hot_tencent():
                 "title": d["title"],
                 "rank": d["rank"],
                 "time": item["timestamp"],
-                "hot_num": [{
-                    "num": d['hot_num'],
-                    "time": item["timestamp"]  # 使用外部的时间戳
-                }]
+                "hot_num": d['hot_num']
+
             })
 
         # 构造每个平台的数据结构
@@ -841,7 +818,7 @@ def get_hot_tencent():
     )
 
 
-@app.get("/word-cloud-hot-num/<int:api_type>")
+@app.get("/hot/word-cloud-hot-num/<int:api_type>")
 def get_word_cloud(api_type: int):
     # 从 url 读取参数
     start_time = request.args.get("start")
@@ -912,7 +889,7 @@ def get_word_cloud(api_type: int):
     )
 
 
-@app.get("/word-cloud-num/<int:api_type>")
+@app.get("/hot/word-cloud-num/<int:api_type>")
 def get_word_cloud_num(api_type: int):
     # 从 url 读取参数
     start_time = request.args.get("start")
@@ -976,12 +953,13 @@ def get_word_cloud_num(api_type: int):
     )
 
 
-@app.get("/trending-data/<int:api_type>")
+@app.get("/hot/trending-data/<int:api_type>")
 def get_trending_data(api_type: int):
     # 从 url 读取参数
     start_time = request.args.get("start")
     end_time = request.args.get("end")
-    app.logger.info(f"start={start_time}, end={end_time}")
+    title_keyword = request.args.get("title_keyword")  # title关键字参数
+    app.logger.info(f"start={start_time}, end={end_time}, title_keyword={title_keyword}")
 
     try:
         # 尝试将api_type转换为枚举类型
@@ -1023,6 +1001,10 @@ def get_trending_data(api_type: int):
         row_data: dict = decode_dict(cell)
         trending_list = json.loads(row_data["trending:list"])
 
+        # 新增筛选逻辑，只保留标题包含关键字的数据
+        if title_keyword and title_keyword not in row_key:
+            continue
+
         item = {
             "title": row_key.split(":")[1],
             "start_timestamp": row_data["analyze:start_timestamp"],
@@ -1052,7 +1034,7 @@ def get_trending_data(api_type: int):
     )
 
 
-@app.get("/weibo-category-data")
+@app.get("/hot/weibo-category-data")
 def get_weibo_category_data():
     # 从 url 读取参数
     start_time = request.args.get("start")
