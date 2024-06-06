@@ -37,7 +37,8 @@ watch(
   async () => {
     await nextTick();
     const data = toRaw(props.data);
-    listData.value = data[0].data;
+    console.log(data.length)
+    listData.value = data[data.length-1].data;
     // console.log(data[0].data)
     for (const dataKey in data[0].data) {
       console.log(data[0].data[dataKey]); // 获取title
@@ -370,7 +371,8 @@ const value1 = ref<[Date, Date]>([curDate, new Date()]);
         </template>
 
         <template #title>
-          <div class="hot-list-item-id">{{ i.rank }}</div>
+          <div class="hot-list-item-id" v-if="i.rank>0">{{ i.rank }}</div>
+          <div class="hot-list-item-id" v-if="i.rank<=0">置顶</div>
           <div>{{ i.title }}</div>
         </template>
         <div class="hot-list-item-info">
