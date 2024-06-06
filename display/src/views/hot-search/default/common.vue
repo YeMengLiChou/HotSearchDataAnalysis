@@ -59,9 +59,9 @@ onMounted(() => {
     new Date().setHours(0, 0, 0, 0) + 86400000
   );
 
-  // queryWordCut(
-  //   new Date().setHours(0, 0, 0, 0),
-  //   new Date().setHours(0, 0, 0, 0) + 86400000);
+  queryWordCut(
+    new Date().setHours(0, 0, 0, 0),
+    new Date().setHours(0, 0, 0, 0) + 86400000);
 });
 
 const queryData = (start: any, end: any) => {
