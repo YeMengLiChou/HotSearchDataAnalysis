@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import ChartWordCloud from "../../../components/charts/ChartWordCloud.vue";
-import { reactive, ref } from "vue";
+import {onMounted, reactive, ref} from "vue";
 import HotDataList from "@/components/charts/HotDataList.vue";
-import { ApiType, getHotSearchOriginData } from "@/api/anaylze";
+import { ApiType, getHotSearchOriginData,getTrendingData } from "@/api/anaylze";
 import { integer } from "vue-types";
 defineOptions({
   name: "common"
@@ -49,7 +49,9 @@ const getDate = val => {
 };
 
 const dataList = ref(null);
-
+onMounted(()=>{
+  queryData(1717603200000, 1717603200000 + 86400000);
+})
 const queryData = (start: any, end: any) => {
   console.log(start, end);
   getHotSearchOriginData(props.apiType, start, end)
@@ -65,7 +67,7 @@ const queryData = (start: any, end: any) => {
 <template>
   <div>
     <div class="weibo-common">
-      <HotDataList @sendDate="getDate" :data="dataList" />
+      <HotDataList @sendDate="getDate" :data="dataList" :api-type="props.apiType"/>
     </div>
     <div class="blank" />
     <ChartWordCloud

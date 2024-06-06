@@ -11,10 +11,15 @@ const props = defineProps({
   data:{
     type:Object,
     default: {}
+  },
+  apiType: {
+    type: Number,
+    default: 0,
+    required: false
   }
 })
 
-const value2 = ref('')
+
 const sendDate= () => {
   let params = {
     date:value2.value
@@ -28,7 +33,7 @@ watch(() => props.data, async () => {
   listData.value = data[0].data
   // console.log(data[0].data)
   for (const dataKey in data[0].data) {
-    console.log(data[0].data[dataKey])
+    console.log(data[0].data[dataKey])// 获取title
   }
 
   if (props.data) {
@@ -124,7 +129,19 @@ function DrawCategory(data:any,len:number) {
     myChart.setOption(option)
   }
 }
-
+const activeNames = ref(['0']); // 初始时，没有面板打开
+const isPanelOneActive = ref(false); // 跟踪面板一是否真正渲染了内容
+const handleCollapseChange = (val)=>{
+  if (val.includes('1') && !isPanelOneActive.value) {
+    console.log(val+"打开")
+  }
+}
+const value2 = ref<Date>(
+  new Date(2024, 5, 6, 0, 0, 0),
+)
+const defaultTime = ref<Date>(
+  new Date(2024, 5, 6, 0, 0, 0),
+)
 </script>
 
 <template>
@@ -134,6 +151,7 @@ function DrawCategory(data:any,len:number) {
         <el-date-picker
           format="YYYY/MM/DD"
           value-format="x"
+          :default-time="defaultTime"
           v-model="value2"
           type="date"
           placeholder="选择热搜日期"
@@ -143,7 +161,7 @@ function DrawCategory(data:any,len:number) {
           :size="size"/>
       </div>
     </div>
-    <el-collapse accordion >
+    <el-collapse accordion @change="handleCollapseChange">
       <el-collapse-item v-for="i in listData"  >
         <template #title>
           <div class="hot-list-item-id">{{i.rank+1}}</div>

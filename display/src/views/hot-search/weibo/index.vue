@@ -13,7 +13,9 @@ const type = ref(ApiType.WeiBoHotSearch)
 
 <template>
   <div>
+
     <Common :apiType="type"/>
+
   </div>
 </template>
 
