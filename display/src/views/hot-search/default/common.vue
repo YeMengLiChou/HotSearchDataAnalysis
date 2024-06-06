@@ -53,10 +53,15 @@ const getDate = (value) => {
 // 数据列表
 const dataList = ref(null);
 onMounted(() => {
+
   queryData(
     new Date().setHours(0, 0, 0, 0),
     new Date().setHours(0, 0, 0, 0) + 86400000
   );
+
+  // queryWordCut(
+  //   new Date().setHours(0, 0, 0, 0),
+  //   new Date().setHours(0, 0, 0, 0) + 86400000);
 });
 
 const queryData = (start: any, end: any) => {
@@ -76,7 +81,7 @@ type Item = {
 };
 
 const transformWordCloud = (data: WordCloudHotNumItem[]) => {
-  
+
   return {
     chartOptions: {
       series: [
