@@ -1,6 +1,6 @@
 import dataclasses
 
-from typing_extensions import Union
+from typing import Union
 
 
 @dataclasses.dataclass
