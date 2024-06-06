@@ -1,13 +1,22 @@
 <script setup lang='ts'>
+import { ApiType } from '@/api/anaylze';
+import Common from '../default/common.vue';
+import { ref } from 'vue';
+
 defineOptions({
   name: 'pengpai'
 })
+
+const type = ref(ApiType.PengPai)
+
 </script>
 
 <template>
-  <div>test</div>
+  <div>
+    <Common :apiType="type"/>
+  </div>
 </template>
 
-<style lang='scss' scoped>
+<style lang='css' scoped>
 
 </style>

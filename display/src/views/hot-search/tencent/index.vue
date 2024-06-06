@@ -4,10 +4,10 @@ import Common from '../default/common.vue';
 import { ref } from 'vue';
 
 defineOptions({
-  name: 'weibo'
+  name: 'tencent'
 })
 
-const type = ref(ApiType.WeiBoHotSearch)
+const type = ref(ApiType.TencentNews)
 
 </script>
 

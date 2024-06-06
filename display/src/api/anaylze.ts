@@ -241,7 +241,9 @@ export const getTrendingData = (
 
 export type WeiBoCategoryData = {
   category: string;
-  values: {}[];
+  values: {
+    
+  }[];
 };
 
 export const getWeiBoCategoryData = (
@@ -253,7 +255,7 @@ export const getWeiBoCategoryData = (
     start,
     end
   };
-  return http.request<ApiResult<TrendingDataItem[]>>(
+  return http.request<ApiResult<WeiBoCategoryData[]>>(
     "get",
     `/hot/weibo-category-data/${apiType}`,
     { params }
