@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import ChartWordCloud from "../../../components/charts/ChartWordCloud.vue";
-<<<<<<< HEAD
+import ChartWordCloud from "@/components/charts/ChartWordCloud.vue";
 import { onMounted, reactive, ref } from "vue";
 import HotDataList from "@/components/charts/HotDataList.vue";
 import {
@@ -9,11 +8,6 @@ import {
   getHotSearchOriginData,
   getWordCloudHotNum
 } from "@/api/anaylze";
-=======
-import {onMounted, reactive, ref} from "vue";
-import HotDataList from "@/components/charts/HotDataList.vue";
-import { ApiType, getHotSearchOriginData,getTrendingData } from "@/api/anaylze";
->>>>>>> refs/remotes/origin/feat-display
 import { integer } from "vue-types";
 import { ElMessage } from "element-plus";
 defineOptions({
