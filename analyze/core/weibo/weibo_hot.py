@@ -5,6 +5,7 @@ from analyze.core.common import jieba_cut
 from analyze.sinks.console import batch_to_console
 from analyze.sinks.trending import TrendingDataForeachWriter
 from analyze.sinks.wordcut import WordCutForeachWriter
+from analyze.sinks.typed import WeiBoCategoryDataForeachWriter
 from constants.scrapy import ApiType
 
 """
@@ -17,6 +18,7 @@ from constants.scrapy import ApiType
 
 __trending_sink = TrendingDataForeachWriter(api_type=ApiType.WeiBoHotSearch.value)
 __word_sink = WordCutForeachWriter(api_type=ApiType.WeiBoHotSearch.value)
+__category_sink = WeiBoCategoryDataForeachWriter()
 
 
 def analyze(df: DataFrame):
@@ -79,6 +81,11 @@ def analyze(df: DataFrame):
     word_df.foreach(__word_sink.process_row)
     batch_to_console(word_df)
 
+    typed_df = analyze_type(df)
+
+    typed_df.foreach(__category_sink.process_row)
+    batch_to_console(typed_df, row=100)
+
 
 """
 词频统计：
@@ -101,11 +108,28 @@ def word_segment_analyze(df: DataFrame):
         .select("timestamp", "word", fn.col("num").alias("hot_num"))
         .groupby("timestamp")
         .agg(
-            fn.array_distinct(
-                fn.collect_list(
-                    fn.struct("word", "hot_num")
-                )
-            ).alias("words"),
-        ).select("words", "timestamp")
+            fn.array_distinct(fn.collect_list(fn.struct("word", "hot_num"))).alias(
+                "words"
+            ),
+        )
+        .select("words", "timestamp")
     )
     return df
+
+
+def analyze_type(df: DataFrame) -> DataFrame:
+    """
+    分析类别,
+    :param df:
+    :return:
+    """
+    result_df = (
+        df.withColumnRenamed(existing="num", new="hot_num")
+        .withColumn("category", fn.explode("category"))
+        .groupby("category", "timestamp")
+        .agg(fn.collect_list(fn.struct("hot_num", "rank")).alias("values"))
+        .select(
+            "category", "timestamp", "values", fn.array_size("values").alias("count")
+        )
+    )
+    return result_df

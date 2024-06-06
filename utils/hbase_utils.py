@@ -12,7 +12,7 @@ _conn: happybase.Connection | None = None
 
 def __conn() -> happybase.Connection:
     global _conn
-    if not _conn.transport.is_open():
+    if not _conn or not _conn.transport.is_open():
         with _lock:
             _conn = happybase.Connection(
                 host=get_settings("hbase.host"),
