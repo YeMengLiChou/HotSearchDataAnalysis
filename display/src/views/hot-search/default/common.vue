@@ -70,21 +70,18 @@ type Item = {
 };
 
 const transformWordCloud = (data: WordCloudHotNumItem[]) => {
-  const items: Array<Item> = [];
-  data.forEach(item => {
-    item.words.forEach(item1 => {
-      items.push({
-        name: item1.word,
-        value: item1.hot_num
-      });
-    });
-  });
+  
   return {
     chartOptions: {
       series: [
         {
           gridSize: 20,
-          data: items
+          data: data.map(item => {
+            return {
+              name: item.word,
+              value: item.hot_num
+            };
+          })
         }
       ]
     }

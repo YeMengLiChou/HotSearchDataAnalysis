@@ -146,11 +146,8 @@ export const getHotSearchOriginData = (
 };
 
 export type WordCloudHotNumItem = {
-  timestamp: number;
-  words: {
-    word: string;
-    hot_num: number;
-  }[];
+  word: string,
+  hot_num: number,
 };
 
 /**
