@@ -1,26 +1,25 @@
 <script setup lang="ts">
-  import * as echarts from 'echarts';
-  import '@/utils/echarts-wordcloud'
-  import {onMounted, ref} from "vue";
-  import merge from "lodash/merge";
+import * as echarts from "echarts";
+import "@/utils/echarts-wordcloud";
+import { nextTick, onMounted, ref, watch } from "vue";
+import merge from "lodash/merge";
 
+// 获取父组件传来的配置
+const props = defineProps({
+  options: {
+    type: Object
+  }
+});
 
-  // 获取父组件传来的配置
-  const props = withDefaults(
-      defineProps<{
-        options: any
-      }>(),
-      {},
-  )
-
-  const defaultSeries = [{
-    type: 'wordCloud',
-    shape: 'circle',
+const defaultSeries = [
+  {
+    type: "wordCloud",
+    shape: "circle",
     keepAspect: false,
-    left: 'center',
-    top: 'center',
-    width: '50%',
-    height: '100%',
+    left: "center",
+    top: "center",
+    width: "50%",
+    height: "100%",
     right: null,
     bottom: null,
     // 词云文本大小范围,  默认为最小12像素，最大60像素
@@ -43,46 +42,58 @@
     layoutAnimation: true,
     // 这是全局的文字样式，相对应的还可以对每个词设置字体样式
     textStyle: {
-      fontFamily: 'sans-serif',
-      fontWeight: 'bold',
+      fontFamily: "sans-serif",
+      fontWeight: "bold",
       // 颜色可以用一个函数来返回字符串
       color: function () {
         // 随机颜色
         return (
-            'rgb(' +
-            [
-              Math.round(Math.random() * 160),
-              Math.round(Math.random() * 160),
-              Math.round(Math.random() * 160),
-            ].join(',') +
-            ')'
-        )
-      },
+          "rgb(" +
+          [
+            Math.round(Math.random() * 160),
+            Math.round(Math.random() * 160),
+            Math.round(Math.random() * 160)
+          ].join(",") +
+          ")"
+        );
+      }
     },
     // 鼠标hover的特效样式
     emphasis: {
-      focus: 'self',
+      focus: "self",
       textStyle: {
         textShadowBlur: 10,
-        textShadowColor: '#999'
+        textShadowColor: "#999"
       }
     },
     data: []
-  }]
-  let seriesData = props.options.series;
-  const series = merge({},seriesData[0],defaultSeries[0]) // {}表示合并后的新对象，可以传入一个空对象作为初始值
-
-  function DrawWordCloud() {
-    // 词云
-    let mychart = echarts.init(document.getElementById("chart-cloud")) // 可以设置主题色'dark'
-    mychart.setOption({
-      series: series
-    })
   }
+];
 
-  onMounted(() => {
-    DrawWordCloud()
-  })
+watch(
+  () => props.options,
+  async () => {
+    await nextTick();
+    console.log("data", props.options);
+    if (props.options) {
+      DrawWordCloud();
+    }
+  },
+  {
+    deep: true,
+  }
+);
+
+function DrawWordCloud() {
+  const seriesData = props.options.series;
+  const series = merge({}, seriesData[0], defaultSeries[0]); // {}表示合并后的新对象，可以传入一个空对象作为初始值
+
+  // 词云
+  let mychart = echarts.init(document.getElementById("chart-cloud")); // 可以设置主题色'dark'
+  mychart.setOption({
+    series: series
+  });
+}
 </script>
 
 <template>
@@ -90,7 +101,7 @@
 </template>
 
 <style scoped>
-#chart-cloud{
+#chart-cloud {
   width: 50vh;
   height: 50vh;
   background-color: white;

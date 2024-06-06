@@ -37,9 +37,7 @@ const state = ref({
 
 const queryTime = ref(0);
 
-
-
-const getDate = (val) => {
+const getDate = val => {
   queryTime.value = parseInt(val.date);
   console.log(queryTime.value);
   queryData(queryTime.value, queryTime.value + 86400000);
@@ -48,9 +46,13 @@ const getDate = (val) => {
 
 // 数据列表
 const dataList = ref(null);
-onMounted(()=>{
-  queryData(new Date().setHours(0, 0, 0, 0), new Date().setHours(0, 0, 0, 0) + 86400000);
-})
+onMounted(() => {
+  queryData(
+    new Date().setHours(0, 0, 0, 0),
+    new Date().setHours(0, 0, 0, 0) + 86400000
+  );
+});
+
 const queryData = (start: any, end: any) => {
   console.log(start, end);
   getHotSearchOriginData(props.apiType, start, end)
@@ -114,15 +116,16 @@ const queryWordCut = (start: number, end: number) => {
 </script>
 
 <template>
+  <div class="weibo-common">
+    <HotDataList
+      @sendDate="getDate"
+      :data="dataList"
+      :api-type="props.apiType"
+    />
+  </div>
+  <div class="blank" />
   <div>
-    <div class="weibo-common">
-      <HotDataList @sendDate="getDate" :data="dataList" :api-type="props.apiType"/>
-    </div>
-    <div class="blank" />
-    <ChartWordCloud
-      :options="state.chartOptions"
-      class="chart-cloud"
-    ></ChartWordCloud>
+    <ChartWordCloud :options="state.chartOptions" class="chart-cloud" />
   </div>
 </template>
 
