@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {reactive, ref, onMounted, watch} from 'vue'
+import {reactive, ref, onMounted, watch, nextTick} from 'vue'
 import {defineEmits} from 'vue'
 import HeatCurveEntry from "@/components/HeatCurveEntry.vue";
 import * as echarts from "echarts/core";
@@ -19,11 +19,16 @@ const sendDate= () => {
   }
   emits('sendDate', params)
 }
-const data = props.data
 
-onMounted(() =>{
-  DrawCategory(data,data.length)
+watch(() => props.data, async () => {
+  await nextTick();
+  console.log(props.data)
+  if (props.data) {
+    DrawCategory(props.data, props.data.length);
+  }
 })
+
+
 const shortcuts = [
   {
     text: '今天',
@@ -55,6 +60,7 @@ interface Tree {
   label: string
   children?: Tree[]
 }
+
 function DrawCategory(data:any,len:number) {
   // 词云
   for (let i = 1; i <= len; i++){

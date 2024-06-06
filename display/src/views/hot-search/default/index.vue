@@ -37,19 +37,19 @@ const getDate = (val)=>{
   queryData(queryTime.value,queryTime.value+86400000)
 
 }
+let dataList = ref(null)
 
 const queryData = (start:any,end:any)=>{
   console.log(start,end)
   getHotSearchOriginData(ApiType.WeiBoHotSearch,start,end).then(res=>{
 
-    dataList = res.data
-    console.log(dataList)
+    dataList.value = res.data
+    console.log(dataList.value)
   }).catch(err=>{
     console.log(err)
   })
 }
 
-let dataList = reactive({})
 
 </script>
 

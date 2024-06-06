@@ -223,12 +223,14 @@ export type TrendingDataItem = {
  */
 export const getTrendingData = (
   apiType: number,
+  title: string,
   start: number,
   end: number
 ): Promise<ApiResult<TrendingDataItem[]>> => {
   const params = {
     start,
-    end
+    end,
+    title_keyword: title
   };
   return http.request<ApiResult<TrendingDataItem[]>>(
     "get",
@@ -240,4 +242,20 @@ export const getTrendingData = (
 export type WeiBoCategoryData = {
   category: string;
   values: {}[];
+};
+
+export const getWeiBoCategoryData = (
+  apiType: number,
+  start: number,
+  end: number
+): Promise<ApiResult<WeiBoCategoryData[]>> => {
+  const params = {
+    start,
+    end
+  };
+  return http.request<ApiResult<TrendingDataItem[]>>(
+    "get",
+    `/hot/weibo-category-data/${apiType}`,
+    { params }
+  );
 };
