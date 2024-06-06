@@ -8,13 +8,6 @@ from analyze.sinks.wordcut import WordCutForeachWriter
 from analyze.sinks.typed import WeiBoCategoryDataForeachWriter
 from constants.scrapy import ApiType
 
-"""
-1. 上榜持续时间 max(timestamp - onboard_time)
-2. 这段时间的排名+热度变化 -> rank hot timestamp
-3. 某个分类上的热搜 -> category note
-4. 明星上榜次数 -> star
-
-"""
 
 __trending_sink = TrendingDataForeachWriter(api_type=ApiType.WeiBoHotSearch.value)
 __word_sink = WordCutForeachWriter(api_type=ApiType.WeiBoHotSearch.value)

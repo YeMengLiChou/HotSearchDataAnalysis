@@ -1,4 +1,4 @@
-from pyspark.sql import DataFrame
+from pyspark.sql import DataFrame, functions as fn
 
 from analyze.core.common import _common_trending_analyze, word_segment_analyze
 from analyze.sinks.console import batch_to_console
@@ -14,7 +14,7 @@ def analyze(df: DataFrame):
     """
     搜狗热搜分析
     """
-
+    df = df.withColumn("hot_num", fn.lit(0))
     result_df = _common_trending_analyze(df)
     result_df.foreach(__trending_sink.process_row)
     batch_to_console(result_df, row=10)

@@ -32,6 +32,7 @@ def get_kafka_source():
         session,
         kafka_server,
         topics=[topic],
+        starting_offsets="earliest"
         # starting_offsets=redis_tools.get_kafka_offset(topic),
     ).load()
 
@@ -74,7 +75,7 @@ def filter_by_api_type(df: DataFrame, api_type: int, schema) -> DataFrame:
 
 def dispatcher(df: DataFrame):
     # 元数据写入 hbase
-    # df.foreach(ScrapedForeachWriter().process_row)
+    df.foreach(ScrapedForeachWriter().process_row)
 
     # 微博热搜榜
     core.analyze_wei_hot_df(
@@ -167,6 +168,10 @@ def dispatcher(df: DataFrame):
     )
 
 
-if __name__ == "__main__":
+def start_spark():
     source = transform_to_json(get_kafka_source())
     dispatcher(source)
+
+
+if __name__ == "__main__":
+    start_spark()
