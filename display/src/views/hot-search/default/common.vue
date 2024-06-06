@@ -50,7 +50,7 @@ const getDate = val => {
 
 const dataList = ref(null);
 onMounted(()=>{
-  queryData(1717603200000, 1717603200000 + 86400000);
+  queryData(new Date().setHours(0, 0, 0, 0), new Date().setHours(0, 0, 0, 0) + 86400000);
 })
 const queryData = (start: any, end: any) => {
   console.log(start, end);
