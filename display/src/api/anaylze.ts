@@ -242,7 +242,8 @@ export const getTrendingData = (
 export type WeiBoCategoryData = {
   category: string;
   values: {
-    
+    hot_num: number,
+    rank: number
   }[];
 };
 
