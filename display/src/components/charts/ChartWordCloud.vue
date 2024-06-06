@@ -26,7 +26,7 @@ const defaultSeries = [
     sizeRange: [10, 40],
     // 词云文字旋转范围和步长。 文本将通过旋转在[-90，90]范围内随机旋转步骤45
     // 如果都设置为 0 , 则是水平显示
-    rotationRange: [0, 0],
+    rotationRange: [-90, 90],
     rotationStep: 45,
     /**
      * 词间距, 距离越大，单词之间的间距越大, 单位像素
