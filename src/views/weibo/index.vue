@@ -7,9 +7,9 @@ const myDate = ref("")
 const getDate = (val)=>{
   myDate.value = val.date
 }
+// 词云的数据
 const state = reactive({
   chartOptions:{
-
     series:[
       {
         gridSize: 20,
@@ -31,6 +31,7 @@ const state = reactive({
     ]
   }
 })
+// 分类散点图数据
 const state2 = reactive({
   chartOptions:{
     legend:{
@@ -38,9 +39,7 @@ const state2 = reactive({
       left: 'center',
       bottom: 5
     },
-
     series:[
-
       {
         name:'政治',
         data:[
@@ -70,6 +69,7 @@ const state2 = reactive({
     ]
   }
 })
+
 onMounted(() => {})
 </script>
 

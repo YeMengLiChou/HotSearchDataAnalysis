@@ -13,8 +13,11 @@ const sendDate= () => {
   }
   emits('sendDate', params)
 }
+let queryData = ref([]) // 通过请求获取数据
+// 定义图表的配置项
 const testData = [
   {
+    title:'热搜词1',key:'1',id:'1',
     data:[
       {
         smooth: true,
@@ -31,6 +34,7 @@ const testData = [
     ]
   },
   {
+    title:'热搜词2',key:'2',id:'2',
     data:[
       {
         smooth: true,
@@ -48,7 +52,7 @@ const testData = [
   }
 ]
 onMounted(() =>{
-  DrawCategory(testData,2)
+  DrawCategory(testData,testData.length)
 })
 const shortcuts = [
   {
@@ -76,30 +80,7 @@ const shortcuts = [
 const disabledDate = (time: Date) => {
   return time.getTime() > Date.now()
 }
-const list = [
-  {title:'热搜词1',key:'1',id:'1'},
-  {title:'热搜词2',key:'2',id:'2'},
-  {title:'热搜词3',key:'3',id:'3'},
-  {title:'热搜词4',key:'4',id:'4'},
-  {title:'热搜词5',key:'5',id:'5'},
-]
 
-const state = ({
-  chartOptions:{
-    legend:{
-      data:["政治","科技"],
-      left: 'center',
-      bottom: 5
-    },
-    xAxis: {
-      type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    },
-    yAxis: {
-      type: 'value'
-    }
-  }
-})
 interface Tree {
   label: string
   children?: Tree[]
@@ -108,8 +89,8 @@ function DrawCategory(data,len) {
   // 词云
   for (let i = 1; i <= len; i++){
     console.log(data[i-1].data,len)
-    let mychart = echarts.init(document.getElementById("chart-"+i))
-    mychart.setOption({
+    let myChart = echarts.init(document.getElementById("chart-"+i))
+    const option = {
       legend:{
         data:["政治","科技"],
         left: 'center',
@@ -129,7 +110,34 @@ function DrawCategory(data,len) {
         containLabel: true
       },
       series:data[i-1].data
-    })
+    }
+    myChart.setOption(option)
+  }
+  for (let i = 1; i <= len; i++){
+    console.log(data[i-1].data,len)
+    let myChart = echarts.init(document.getElementById("-chart-"+i))
+    const option = {
+      legend:{
+        data:["政治","科技"],
+        left: 'center',
+        bottom: 5
+      },
+      xAxis: {
+        type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      },
+      yAxis: {
+        type: 'value'
+      },
+      grid: {
+        left: '3%',
+        right: '7%',
+        bottom: '7%',
+        containLabel: true
+      },
+      series:data[i-1].data
+    }
+    myChart.setOption(option)
   }
 }
 
@@ -150,13 +158,14 @@ function DrawCategory(data,len) {
       </div>
     </div>
     <el-collapse accordion >
-      <el-collapse-item v-for="i in list" >
+      <el-collapse-item v-for="i in testData" >
         <template #title>
           <div class="hot-list-item-id">{{i.id}}</div>
           <div> {{i.title}}</div>
         </template>
         <div class="hot-list-item-info" >
           <div :id="`chart-${i.id}`" class="chart"></div>
+          <div :id="`-chart-${i.id}`" class="chart"> </div>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -179,6 +188,8 @@ function DrawCategory(data,len) {
 }
 .hot-list-item-info{
   margin: 15px;
+  display: flex;
+  justify-content: center;
 }
 .chart{
   height: 400px;
