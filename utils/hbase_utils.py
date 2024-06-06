@@ -7,19 +7,26 @@ from threading import Lock
 
 _lock = Lock()
 
-with _lock:
-    _conn = happybase.Connection(
-        host=get_settings("hbase.host"),
-        port=get_settings("hbase.port"),
-        autoconnect=False,
-    )
-    _conn.open()
+_conn: happybase.Connection | None = None
+
+
+def __conn() -> happybase.Connection:
+    global _conn
+    if not _conn.transport.is_open():
+        with _lock:
+            _conn = happybase.Connection(
+                host=get_settings("hbase.host"),
+                port=get_settings("hbase.port"),
+                autoconnect=False,
+            )
+            _conn.open()
+    return _conn
 
 
 def create_table(
-    table_name: str,
-    column_family: Union[dict[str, dict], list[str]],
-    cover: bool = False,
+        table_name: str,
+        column_family: Union[dict[str, dict], list[str]],
+        cover: bool = False,
 ):
     """
     创建表
@@ -31,12 +38,12 @@ def create_table(
     if isinstance(column_family, list):
         column_family = {cf: {} for cf in column_family}
 
-    if table_name.encode("utf-8") not in _conn.tables():
-        _conn.create_table(table_name, column_family)
+    if table_name.encode("utf-8") not in __conn().tables():
+        __conn().create_table(table_name, column_family)
     else:
         if cover:
-            _conn.delete_table(table_name, disable=True)
-            _conn.create_table(table_name, column_family)
+            __conn().delete_table(table_name, disable=True)
+            __conn().create_table(table_name, column_family)
 
 
 def delete_table(table_name: str):
@@ -45,8 +52,8 @@ def delete_table(table_name: str):
     :param table_name:
     :return:
     """
-    if table_name in _conn.tables():
-        _conn.delete_table(table_name, disable=True)
+    if table_name in __conn().tables():
+        __conn().delete_table(table_name, disable=True)
 
 
 def put(table_name: str, row_key: str, data: dict):
@@ -57,29 +64,13 @@ def put(table_name: str, row_key: str, data: dict):
     :param row_key:
     :return:
     """
-    table = _conn.table(table_name)
+    table = __conn().table(table_name)
     table.put(row=row_key, data=data)
 
 
 def get_table(table_name: str) -> happybase.Table:
-    return _conn.table(table_name)
+    return __conn().table(table_name)
 
 
 if __name__ == "__main__":
-    print(_conn.tables())
-    # _conn.create_table("test1", {"cf1": {}, "cf2": {}})
-    # # create_table("test", ["cf1", "cf2"])
-    # put(
-    #     "test1",
-    #     "123",
-    #     {"cf1:a": "haha"}
-    # )
-    # # put(
-    # #     "scraped",
-    # #     "1716657002576:4",
-    # #     {"items:data": "{'api_type': 4, 'data': [], 'timestamp': 1716657002576}"},
-    # # )
-    # # print(_conn.table("test").families())
-    # table = _conn.table("test1")
-    # for item in table.scan():
-    #     print(item)
+    print(__conn().tables())
