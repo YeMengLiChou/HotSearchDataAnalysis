@@ -71,4 +71,4 @@ kafka.topic = "hot_1"
 
 
 [hbase]
-host = "10.34.5.226"
+host = "127.0.0.1"
