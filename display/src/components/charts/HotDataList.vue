@@ -5,7 +5,12 @@ import HeatCurveEntry from "@/components/HeatCurveEntry.vue";
 import * as echarts from "echarts/core";
 const emits = defineEmits(['sendDate'])
 const size = ref<'default' | 'large' | 'small'>('default')
-
+const props = defineProps({
+  data:{
+    type:Object,
+    default:[]
+  }
+})
 const value2 = ref('')
 const sendDate= () => {
   let params = {
@@ -13,46 +18,11 @@ const sendDate= () => {
   }
   emits('sendDate', params)
 }
-let queryData = ref([]) // 通过请求获取数据
-// 定义图表的配置项
-const testData = [
-  {
-    title:'热搜词1',key:'1',id:'1',
-    data:[
-      {
-        smooth: true,
-        name: '政治',
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
-        type: 'line'
-      },
-      {
-        smooth: true,
-        name: '科技',
-        data: [120, 532, 301, 634, 1190, 1830, 2320],
-        type: 'line'
-      }
-    ]
-  },
-  {
-    title:'热搜词2',key:'2',id:'2',
-    data:[
-      {
-        smooth: true,
-        name: '政治',
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
-        type: 'line'
-      },
-      {
-        smooth: true,
-        name: '科技',
-        data: [120, 532, 301, 634, 1190, 1830, 2320],
-        type: 'line'
-      }
-    ]
-  }
-]
+const data = props.data
+
 onMounted(() =>{
-  DrawCategory(testData,testData.length)
+  console.log(data)
+  DrawCategory(data,data.length)
 })
 const shortcuts = [
   {
@@ -85,7 +55,7 @@ interface Tree {
   label: string
   children?: Tree[]
 }
-function DrawCategory(data,len) {
+function DrawCategory(data:any,len:number) {
   // 词云
   for (let i = 1; i <= len; i++){
     console.log(data[i-1].data,len)
@@ -148,6 +118,8 @@ function DrawCategory(data,len) {
     <div class="query-time-table">
       <div class="date-picker">
         <el-date-picker
+          format="YYYY/MM/DD"
+          value-format="x"
           v-model="value2"
           type="date"
           placeholder="选择热搜日期"
@@ -158,7 +130,7 @@ function DrawCategory(data,len) {
       </div>
     </div>
     <el-collapse accordion >
-      <el-collapse-item v-for="i in testData" >
+      <el-collapse-item v-for="i in data" >
         <template #title>
           <div class="hot-list-item-id">{{i.id}}</div>
           <div> {{i.title}}</div>
@@ -192,7 +164,7 @@ function DrawCategory(data,len) {
   justify-content: center;
 }
 .chart{
-  height: 400px;
-  width: 400px;
+  height: 60vh;
+  width: 60vh;
 }
 </style>

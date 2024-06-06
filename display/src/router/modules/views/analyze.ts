@@ -23,6 +23,14 @@ export default {
       meta: {
         title: "澎湃新闻"
       }
+    },
+    {
+      path: "/hot-search/default",
+      name: "default",
+      component: () => import("@/views/hot-search/default/index.vue"),
+      meta: {
+        title: "默认模板"
+      }
     }
   ]
 } satisfies RouteConfigsTable;
